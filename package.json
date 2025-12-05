@@ -1,0 +1,40 @@
+{
+  "name": "portfolio-blog-websites",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:property": "jest --testPathPatterns=property",
+    "analyze": "ANALYZE=true npm run build",
+    "analyze:server": "ANALYZE=true BUNDLE_ANALYZE=server npm run build",
+    "analyze:browser": "ANALYZE=true BUNDLE_ANALYZE=browser npm run build"
+  },
+  "dependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
+    "fast-check": "^4.3.0",
+    "framer-motion": "^12.23.25",
+    "jest": "^30.2.0",
+    "jest-environment-jsdom": "^30.2.0",
+    "next": "16.0.7",
+    "react": "19.2.0",
+    "react-dom": "19.2.0"
+  },
+  "devDependencies": {
+    "@next/bundle-analyzer": "^16.0.7",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.0.7",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}
