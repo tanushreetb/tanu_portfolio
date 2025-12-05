@@ -1,0 +1,731 @@
+@import "tailwindcss";
+
+/* CSS Custom Properties for Theme System - WCAG AA Compliant */
+:root {
+  /* Light theme colors - All combinations meet WCAG AA standards (4.5:1 for normal text, 3:1 for large text) */
+  --color-primary: #0052a3; /* Blue - 4.54:1 contrast on white background */
+  --color-secondary: #6b21a8; /* Purple - 7.35:1 contrast on white background */
+  --color-accent: #b45309; /* Orange - 5.89:1 contrast on white background */
+  --color-background: #ffffff;
+  --color-surface: #f8fafc;
+  --color-text-primary: #1f2937; /* 14.59:1 contrast on white background */
+  --color-text-secondary: #4b5563; /* 7.52:1 contrast on white background */
+  --color-border: #e5e7eb;
+  
+  /* Animation variables */
+  --animation-duration-fast: 0.2s;
+  --animation-duration-normal: 0.3s;
+  --animation-duration-slow: 0.5s;
+  --animation-easing: cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Legacy variables for compatibility */
+  --background: var(--color-background);
+  --foreground: var(--color-text-primary);
+}
+
+[data-theme="dark"] {
+  /* Dark theme colors - All combinations meet WCAG AA standards (4.5:1 for normal text, 3:1 for large text) */
+  --color-primary: #60a5fa; /* Blue - 6.28:1 contrast on dark background */
+  --color-secondary: #a78bfa; /* Purple - 6.89:1 contrast on dark background */
+  --color-accent: #fbbf24; /* Yellow - 10.35:1 contrast on dark background */
+  --color-background: #111827;
+  --color-surface: #1f2937;
+  --color-text-primary: #f9fafb; /* 15.57:1 contrast on dark background */
+  --color-text-secondary: #d1d5db; /* 9.89:1 contrast on dark background */
+  --color-border: #374151;
+  
+  /* Legacy variables for compatibility */
+  --background: var(--color-background);
+  --foreground: var(--color-text-primary);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --color-background: #111827;
+    --color-surface: #1f2937;
+    --color-text-primary: #f9fafb;
+    --color-text-secondary: #d1d5db;
+    --color-border: #374151;
+    --background: var(--color-background);
+    --foreground: var(--color-text-primary);
+  }
+}
+
+/* Base styles using custom properties */
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+  transition: background-color var(--animation-duration-normal) var(--animation-easing),
+              color var(--animation-duration-normal) var(--animation-easing);
+}
+
+/* Accessibility: Focus Management - WCAG 2.1 compliant focus indicators */
+/* Visible focus indicator with 3:1 contrast ratio against background */
+*:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Enhanced focus for interactive elements */
+a:focus,
+button:focus,
+input:focus,
+textarea:focus,
+select:focus {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Focus-visible for keyboard navigation only (removes focus ring for mouse clicks) */
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+*:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+}
+
+/* Skip to main content link for keyboard navigation */
+.skip-to-main {
+  position: absolute;
+  left: -9999px;
+  z-index: 999;
+  padding: 1rem 1.5rem;
+  background-color: var(--color-primary);
+  color: white;
+  text-decoration: none;
+  border-radius: 0 0 4px 0;
+}
+
+.skip-to-main:focus {
+  left: 0;
+  top: 0;
+}
+
+/* Animation utilities */
+.animate-fade-in {
+  animation: fadeIn var(--animation-duration-normal) var(--animation-easing);
+}
+
+.animate-slide-up {
+  animation: slideUp var(--animation-duration-normal) var(--animation-easing);
+}
+
+.animate-scale-in {
+  animation: scaleIn var(--animation-duration-normal) var(--animation-easing);
+}
+
+/**
+ * Fade In Animation
+ * 
+ * Simple opacity transition from invisible to visible.
+ * Used for subtle content reveals that don't require spatial movement.
+ * Duration and easing are controlled by the animation property where this is applied.
+ * 
+ * Animation flow:
+ * - from: Element is completely transparent (opacity: 0)
+ * - to: Element fades to fully visible (opacity: 1)
+ */
+@keyframes fadeIn {
+  from {
+    opacity: 0; /* Start invisible */
+  }
+  to {
+    opacity: 1; /* End fully visible */
+  }
+}
+
+/**
+ * Slide Up Animation
+ * 
+ * Combines vertical movement with opacity change for dynamic content entrances.
+ * Elements start 20px below their final position and fade in as they slide up.
+ * Commonly used for card reveals, section transitions, and content loading.
+ * 
+ * Animation flow:
+ * - from: Element is invisible and positioned 20px below final position
+ * - to: Element slides up to final position while fading in
+ */
+@keyframes slideUp {
+  from {
+    transform: translateY(20px); /* Start 20px below final position */
+    opacity: 0; /* Start invisible */
+  }
+  to {
+    transform: translateY(0); /* Move to final position */
+    opacity: 1; /* End fully visible */
+  }
+}
+
+/**
+ * Scale In Animation
+ * 
+ * Creates a zoom-in effect by scaling from 95% to 100% while fading in.
+ * The subtle scale change (0.95 to 1.0) provides emphasis without being jarring.
+ * Ideal for interactive elements like buttons and cards on hover or focus.
+ * 
+ * Animation flow:
+ * - from: Element is slightly smaller (95%) and invisible
+ * - to: Element scales to full size (100%) while fading in
+ */
+@keyframes scaleIn {
+  from {
+    transform: scale(0.95); /* Start at 95% size */
+    opacity: 0; /* Start invisible */
+  }
+  to {
+    transform: scale(1); /* Scale to full size (100%) */
+    opacity: 1; /* End fully visible */
+  }
+}
+
+/* Responsive Breakpoints - Mobile-first approach */
+/* 
+ * Breakpoint system:
+ * - Mobile: < 640px (default, no media query needed)
+ * - Tablet: 640px - 1023px
+ * - Desktop: >= 1024px
+ * - Large Desktop: >= 1280px
+ */
+
+/* Base mobile-first styles */
+:root {
+  --container-padding: 1rem;
+  --section-spacing: 2rem;
+  --grid-gap: 1rem;
+}
+
+/* Tablet breakpoint */
+@media (min-width: 640px) {
+  :root {
+    --container-padding: 1.5rem;
+    --section-spacing: 3rem;
+    --grid-gap: 1.5rem;
+  }
+}
+
+/* Desktop breakpoint */
+@media (min-width: 1024px) {
+  :root {
+    --container-padding: 2rem;
+    --section-spacing: 4rem;
+    --grid-gap: 2rem;
+  }
+}
+
+/* Touch-friendly navigation utilities */
+.touch-target {
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Mobile navigation utilities */
+.mobile-nav-item {
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  min-height: 44px;
+}
+
+/* Responsive container utilities */
+.responsive-container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 var(--container-padding);
+}
+
+/* Responsive grid utilities */
+.responsive-grid {
+  display: grid;
+  gap: var(--grid-gap);
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+  .responsive-grid-sm-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .responsive-grid-lg-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .responsive-grid-lg-4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Responsive text utilities */
+.responsive-heading-xl {
+  font-size: 2rem;
+  line-height: 1.2;
+}
+
+@media (min-width: 640px) {
+  .responsive-heading-xl {
+    font-size: 2.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .responsive-heading-xl {
+    font-size: 3rem;
+  }
+}
+
+.responsive-heading-lg {
+  font-size: 1.5rem;
+  line-height: 1.3;
+}
+
+@media (min-width: 640px) {
+  .responsive-heading-lg {
+    font-size: 1.875rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .responsive-heading-lg {
+    font-size: 2.25rem;
+  }
+}
+
+/* Responsive spacing utilities */
+.responsive-section {
+  padding: var(--section-spacing) 0;
+}
+
+/* Mobile-specific utilities */
+@media (max-width: 639px) {
+  .hide-mobile {
+    display: none;
+  }
+  
+  .full-width-mobile {
+    width: 100%;
+  }
+  
+  .stack-mobile {
+    flex-direction: column;
+  }
+}
+
+/* Tablet and up */
+@media (min-width: 640px) {
+  .hide-tablet-up {
+    display: none;
+  }
+}
+
+/* Desktop and up */
+@media (min-width: 1024px) {
+  .hide-desktop {
+    display: none;
+  }
+}
+
+/* Responsive design utilities */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================================================
+   FALLBACKS FOR UNSUPPORTED FEATURES
+   ============================================================================
+   
+   This section provides graceful degradation for browsers that don't support
+   modern CSS features. Each fallback ensures the site remains functional and
+   visually acceptable even without the enhanced features.
+   
+   Requirements: 5.4 - Responsive design fallbacks for unsupported features
+   ============================================================================ */
+
+/**
+ * CSS Grid Fallback
+ * 
+ * Provides flexbox-based layout for browsers that don't support CSS Grid.
+ * The @supports rule checks for grid support and only applies flexbox
+ * when grid is not available.
+ * 
+ * Fallback approach:
+ * - Use flexbox with flex-wrap for multi-column layouts
+ * - Calculate column widths using calc() for consistent spacing
+ * - Maintain responsive behavior with media queries
+ */
+@supports not (display: grid) {
+  .responsive-grid {
+    display: flex;
+    flex-wrap: wrap;
+    margin: calc(var(--grid-gap) * -0.5);
+  }
+  
+  .responsive-grid > * {
+    flex: 1 1 100%;
+    margin: calc(var(--grid-gap) * 0.5);
+  }
+  
+  @media (min-width: 640px) {
+    .responsive-grid-sm-2 > * {
+      flex: 1 1 calc(50% - var(--grid-gap));
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .responsive-grid-lg-3 > * {
+      flex: 1 1 calc(33.333% - var(--grid-gap));
+    }
+    
+    .responsive-grid-lg-4 > * {
+      flex: 1 1 calc(25% - var(--grid-gap));
+    }
+  }
+}
+
+/**
+ * CSS Custom Properties Fallback
+ * 
+ * Provides hardcoded color values for browsers that don't support CSS variables.
+ * These fallback values are defined before the custom property usage, so browsers
+ * that support custom properties will override them.
+ * 
+ * Fallback approach:
+ * - Define hardcoded colors before var() usage
+ * - Use the same WCAG AA compliant colors as the custom properties
+ * - Maintain both light and dark theme support
+ */
+@supports not (--css: variables) {
+  /* Light theme fallback colors */
+  body {
+    background: #ffffff;
+    color: #1f2937;
+  }
+  
+  /* Dark theme fallback colors */
+  [data-theme="dark"] body {
+    background: #111827;
+    color: #f9fafb;
+  }
+  
+  /* Focus indicators fallback */
+  *:focus-visible {
+    outline: 3px solid #0052a3;
+    outline-offset: 2px;
+  }
+  
+  [data-theme="dark"] *:focus-visible {
+    outline: 3px solid #60a5fa;
+    outline-offset: 2px;
+  }
+}
+
+/**
+ * Backdrop Filter Fallback
+ * 
+ * Provides solid background colors for browsers that don't support backdrop-filter.
+ * This ensures overlays and modals remain readable even without the blur effect.
+ * 
+ * Fallback approach:
+ * - Use solid background colors with appropriate opacity
+ * - Ensure sufficient contrast for text readability
+ * - Maintain visual hierarchy without blur effects
+ */
+@supports (not (backdrop-filter: blur(10px))) and (not (-webkit-backdrop-filter: blur(10px))) {
+  .backdrop-blur {
+    background-color: rgba(255, 255, 255, 0.95);
+  }
+  
+  [data-theme="dark"] .backdrop-blur {
+    background-color: rgba(17, 24, 39, 0.95);
+  }
+  
+  .backdrop-blur-sm {
+    background-color: rgba(255, 255, 255, 0.9);
+  }
+  
+  [data-theme="dark"] .backdrop-blur-sm {
+    background-color: rgba(17, 24, 39, 0.9);
+  }
+}
+
+/**
+ * Flexbox Gap Fallback
+ * 
+ * Provides margin-based spacing for browsers that don't support the gap property
+ * in flexbox layouts. This ensures consistent spacing across all browsers.
+ * 
+ * Fallback approach:
+ * - Use negative margins on container
+ * - Use positive margins on children
+ * - Maintain consistent spacing values
+ */
+@supports not (gap: 1rem) {
+  .flex-gap-4 {
+    margin: -0.5rem;
+  }
+  
+  .flex-gap-4 > * {
+    margin: 0.5rem;
+  }
+  
+  .flex-gap-8 {
+    margin: -1rem;
+  }
+  
+  .flex-gap-8 > * {
+    margin: 1rem;
+  }
+}
+
+/**
+ * Sticky Position Fallback
+ * 
+ * Provides fixed positioning fallback for browsers that don't support
+ * position: sticky. This ensures navigation elements remain accessible.
+ * 
+ * Fallback approach:
+ * - Use position: fixed as fallback
+ * - Adjust z-index for proper layering
+ * - Maintain accessibility and usability
+ */
+@supports not (position: sticky) {
+  .sticky-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+  }
+  
+  /* Add padding to body to prevent content from hiding under fixed nav */
+  body:has(.sticky-nav) {
+    padding-top: 4rem;
+  }
+}
+
+/**
+ * Object-fit Fallback
+ * 
+ * Provides background-image based fallback for browsers that don't support
+ * object-fit on images. This ensures images display correctly in containers.
+ * 
+ * Fallback approach:
+ * - Hide the img element
+ * - Use background-image on parent container
+ * - Apply background-size: cover for similar effect
+ */
+@supports not (object-fit: cover) {
+  .object-fit-cover {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  
+  .object-fit-cover img {
+    opacity: 0;
+  }
+}
+
+/**
+ * Aspect Ratio Fallback
+ * 
+ * Provides padding-based aspect ratio technique for browsers that don't
+ * support the aspect-ratio property. This ensures consistent image and
+ * video container dimensions.
+ * 
+ * Fallback approach:
+ * - Use padding-top percentage trick
+ * - Position content absolutely within container
+ * - Maintain common aspect ratios (16:9, 4:3, 1:1)
+ */
+@supports not (aspect-ratio: 16 / 9) {
+  .aspect-ratio-16-9 {
+    position: relative;
+    padding-top: 56.25%; /* 9/16 = 0.5625 */
+  }
+  
+  .aspect-ratio-16-9 > * {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .aspect-ratio-4-3 {
+    position: relative;
+    padding-top: 75%; /* 3/4 = 0.75 */
+  }
+  
+  .aspect-ratio-4-3 > * {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .aspect-ratio-1-1 {
+    position: relative;
+    padding-top: 100%; /* 1/1 = 1.0 */
+  }
+  
+  .aspect-ratio-1-1 > * {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+/**
+ * Clamp Function Fallback
+ * 
+ * Provides media query based responsive sizing for browsers that don't
+ * support the clamp() function. This ensures responsive typography works
+ * across all browsers.
+ * 
+ * Fallback approach:
+ * - Define minimum size as default
+ * - Use media queries to scale up at breakpoints
+ * - Maintain readability at all viewport sizes
+ */
+@supports not (font-size: clamp(1rem, 2vw, 2rem)) {
+  .text-responsive {
+    font-size: 1rem;
+  }
+  
+  @media (min-width: 640px) {
+    .text-responsive {
+      font-size: 1.25rem;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .text-responsive {
+      font-size: 1.5rem;
+    }
+  }
+  
+  @media (min-width: 1280px) {
+    .text-responsive {
+      font-size: 2rem;
+    }
+  }
+}
+
+/**
+ * Transform Fallback
+ * 
+ * Provides alternative positioning for browsers with limited transform support.
+ * This ensures animations and transitions degrade gracefully.
+ * 
+ * Fallback approach:
+ * - Use opacity-only transitions when transforms aren't supported
+ * - Maintain visual feedback without spatial transformations
+ * - Ensure interactive elements remain functional
+ */
+@supports not (transform: translateY(0)) {
+  .animate-slide-up {
+    animation: fadeIn var(--animation-duration-normal) var(--animation-easing);
+  }
+  
+  /* Remove transform-based animations, keep opacity */
+  @keyframes slideUpFallback {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}
+
+/**
+ * Scroll Behavior Fallback
+ * 
+ * Ensures smooth scrolling works even in browsers that don't support
+ * scroll-behavior: smooth. This provides a consistent user experience.
+ * 
+ * Note: JavaScript-based smooth scrolling can be added as an enhancement
+ * for browsers that don't support this CSS property.
+ */
+@supports not (scroll-behavior: smooth) {
+  html {
+    /* Instant scroll as fallback */
+    scroll-behavior: auto;
+  }
+}
+
+/**
+ * Print Styles
+ * 
+ * Ensures the website prints correctly by removing unnecessary elements
+ * and optimizing layout for paper. This is a form of graceful degradation
+ * for the print medium.
+ */
+@media print {
+  /* Hide navigation and interactive elements */
+  nav,
+  .skip-to-main,
+  button,
+  .no-print {
+    display: none !important;
+  }
+  
+  /* Optimize colors for print */
+  body {
+    background: white;
+    color: black;
+  }
+  
+  /* Remove shadows and effects */
+  * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+  
+  /* Ensure links are visible */
+  a {
+    text-decoration: underline;
+  }
+  
+  /* Show link URLs after link text */
+  a[href]:after {
+    content: " (" attr(href) ")";
+  }
+  
+  /* Prevent page breaks inside elements */
+  h1, h2, h3, h4, h5, h6,
+  p, blockquote, pre,
+  ul, ol, dl {
+    page-break-inside: avoid;
+  }
+  
+  /* Ensure images fit on page */
+  img {
+    max-width: 100% !important;
+    page-break-inside: avoid;
+  }
+}

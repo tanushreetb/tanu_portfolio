@@ -1,0 +1,92 @@
+/* Portfolio-specific styles with responsive design */
+.portfolioContainer {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.heroSection {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  position: relative;
+  overflow: hidden;
+  /* Responsive padding */
+  padding: 2rem 0;
+}
+
+.heroSection::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.1);
+  z-index: 1;
+}
+
+.heroSection > * {
+  position: relative;
+  z-index: 2;
+}
+
+.projectCard {
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+  /* Ensure proper spacing on mobile */
+  margin-bottom: 1rem;
+}
+
+.projectCard:hover {
+  transform: translateY(-5px);
+  border-color: #3b82f6;
+}
+
+.skillsGrid {
+  background: linear-gradient(45deg, #f8fafc 0%, #e2e8f0 100%);
+}
+
+@media (prefers-color-scheme: dark) {
+  .skillsGrid {
+    background: linear-gradient(45deg, #1a202c 0%, #2d3748 100%);
+  }
+}
+
+/* Tablet Responsive Styles - 640px to 1023px */
+@media (min-width: 640px) and (max-width: 1023px) {
+  .heroSection {
+    padding: 3rem 0;
+  }
+
+  .projectCard {
+    margin-bottom: 1.5rem;
+  }
+}
+
+/* Mobile Responsive Styles - Below 640px */
+@media (max-width: 639px) {
+  .heroSection {
+    padding: 1.5rem 0;
+  }
+
+  .projectCard {
+    margin-bottom: 1rem;
+  }
+
+  /* Ensure touch-friendly buttons on mobile */
+  .projectCard a,
+  .projectCard button {
+    min-height: 44px;
+    padding: 0.75rem 1rem;
+  }
+}
+
+/* Desktop Responsive Styles - 1024px and above */
+@media (min-width: 1024px) {
+  .heroSection {
+    padding: 4rem 0;
+  }
+
+  .projectCard {
+    margin-bottom: 2rem;
+  }
+}
