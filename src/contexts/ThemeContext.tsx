@@ -124,6 +124,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       try {
         if (document.documentElement) {
           document.documentElement.setAttribute('data-theme', initialTheme);
+          document.documentElement.classList.toggle('dark', initialTheme === 'dark');
         }
       } catch (error) {
         // DOM manipulation might fail in some edge cases
@@ -201,6 +202,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         if (document.documentElement) {
           // Set data-theme attribute which CSS uses to switch color variables
           document.documentElement.setAttribute('data-theme', newTheme);
+          document.documentElement.classList.toggle('dark', newTheme === 'dark');
         }
       } catch (error) {
         // DOM manipulation might fail in restricted environments

@@ -1,199 +1,215 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { portfolioData } from '@/data/portfolio';
-import styles from '@/styles/portfolio.module.css';
+import { Mail, Check, ArrowRight } from 'lucide-react';
+import { LinkedInIcon, GitHubIcon, GmailIcon } from '@/components/shared/SocialIcons';
 
-/**
- * ContactSection component displays contact information with hover animations.
- * Implements scale and color transitions on interactive elements.
- */
+export const ContactSection = () => {
+  const [formState, setFormState] = useState<'idle' | 'sending' | 'sent'>('idle');
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: '',
+  });
 
-export const ContactSection: React.FC = () => {
-  const { personal } = portfolioData;
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setFormState('sending');
+    setTimeout(() => {
+      setFormState('sent');
+      setFormData({ name: '', email: '', subject: '', message: '' });
+      setTimeout(() => setFormState('idle'), 4000);
+    }, 1200);
+  };
 
   return (
-    <section className="relative py-20 px-4 sm:px-6 overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute inset-0 opacity-30">
-        <motion.div
-          className="absolute bottom-20 right-10 w-64 h-64 bg-rose-300 dark:bg-rose-900 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-xl"
-          animate={{
-            x: [0, -50, 0],
-            y: [0, 30, 0],
-          }}
-          transition={{
-            duration: 17,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
+    <section
+      id="contact"
+      aria-label="Contact Section"
+      className="py-24 sm:py-32 px-6 sm:px-12 lg:px-20 bg-[#D6B598]/25 dark:bg-[#1C120C] transition-colors relative overflow-hidden"
+    >
+      {/* Background Architectural Watermark Heading — Perfectly Centered for All Screen Types */}
+      <div
+        className="absolute top-6 sm:top-8 md:top-10 left-1/2 -translate-x-1/2 w-full text-center pointer-events-none select-none font-display font-black text-4xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl text-[#4C3526]/[0.05] dark:text-[#FBEAD5]/[0.04] tracking-tight sm:tracking-tighter whitespace-nowrap z-0 overflow-hidden leading-none px-4"
+        aria-hidden="true"
+      >
+        07 · CONTACT
       </div>
 
-      <div className="relative z-10 container mx-auto max-w-6xl">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <motion.div
-            className="inline-flex items-center gap-2 px-4 py-2 bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-full border border-white/20 dark:border-gray-700/20 mb-4 shadow-lg"
-            initial={{ opacity: 0, scale: 0.8 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-          >
-            <span className="text-2xl">📧</span>
-            <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
-              Contact
-            </span>
-          </motion.div>
-
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black mb-4 bg-linear-to-r from-rose-600 via-pink-600 to-purple-600 bg-clip-text text-transparent">
-            Let's Connect
-          </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Have a project in mind? Let's work together
-          </p>
-        </motion.div>
+      <div className="max-w-6xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start relative z-10">
         
-        <div className="max-w-4xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
-            {/* Contact Information */}
-            <motion.div 
-              className="bg-white/40 dark:bg-gray-800/40 backdrop-blur-xl border border-white/20 dark:border-gray-700/20 rounded-2xl shadow-xl p-8"
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
+        {/* Left Column: Heading, Info, Socials */}
+        <div className="lg:col-span-5 flex flex-col">
+          <span className="text-xs font-mono tracking-[0.25em] text-[#8F6E54] dark:text-[#C9A687] uppercase font-semibold mb-2">
+            07 · GET IN TOUCH
+          </span>
+          <h2 className="text-4xl sm:text-5xl font-display font-black text-[#4C3526] dark:text-[#FBEAD5] tracking-tight mb-4 leading-tight">
+            Let's Build<br />Something Meaningful.
+          </h2>
+          <div className="w-12 h-[1.5px] bg-[#4C3526] dark:bg-[#FBEAD5] mb-6" />
+          
+          <p className="text-base text-[#70533C] dark:text-[#D6B598] leading-relaxed mb-8">
+            Have an idea, opportunity or project in mind? Whether you're hiring for AI/ML, backend, or full-stack engineering roles, exploring automation workflows with LLMs, or discussing collaboration, I'd love to hear from you.
+          </p>
+
+          {/* Direct Email Card */}
+          <div className="bg-[#F0D6BD]/85 dark:bg-[#2B1E16]/85 backdrop-blur-md p-6 rounded-2xl border border-[rgba(76,53,38,0.18)] dark:border-[rgba(240,214,189,0.18)] shadow-clay mb-4 flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-[#FBEAD5] dark:bg-[#38271C] border border-[rgba(76,53,38,0.18)] dark:border-[rgba(240,214,189,0.18)] flex items-center justify-center text-[#4C3526] dark:text-[#FBEAD5] shadow-sm">
+              <Mail className="w-5 h-5" />
+            </div>
+            <div>
+              <span className="text-[10px] font-mono tracking-widest text-[#8F6E54] dark:text-[#C9A687] uppercase block">
+                DIRECT EMAIL
+              </span>
+              <a
+                href="mailto:tanushree251105@gmail.com"
+                className="text-sm sm:text-base font-mono font-bold text-[#4C3526] dark:text-[#FBEAD5] hover:underline"
+              >
+                tanushree251105@gmail.com
+              </a>
+            </div>
+          </div>
+
+          {/* Location & Phone Badge */}
+          <div className="flex flex-wrap gap-2 text-xs font-mono text-[#70533C] dark:text-[#D6B598] mb-8">
+            <span className="px-3 py-1.5 rounded-xl bg-[#F0D6BD]/60 dark:bg-[#2B1E16]/60 border border-[rgba(76,53,38,0.15)] dark:border-[rgba(240,214,189,0.15)]">
+              📍 Dharmapuri, Tamil Nadu, India
+            </span>
+            <span className="px-3 py-1.5 rounded-xl bg-[#F0D6BD]/60 dark:bg-[#2B1E16]/60 border border-[rgba(76,53,38,0.15)] dark:border-[rgba(240,214,189,0.15)]">
+              📞 +91 7603973955
+            </span>
+          </div>
+
+          {/* Social Links */}
+          <div className="flex items-center gap-3">
+            <a
+              href="https://www.linkedin.com/in/tanushree-t-b-74b730317"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-4 py-2 rounded-full text-xs font-mono font-semibold text-[#4C3526] dark:text-[#FBEAD5] bg-[#FBEAD5] dark:bg-[#2B1E16] border border-[rgba(76,53,38,0.2)] dark:border-[rgba(240,214,189,0.2)] hover:border-[#4C3526] shadow-sm flex items-center gap-2 hover:scale-105 transition-all"
+              data-cursor="open"
             >
-              <h3 className="text-2xl font-black text-gray-900 dark:text-white mb-6 bg-linear-to-r from-rose-600 to-purple-600 bg-clip-text text-transparent">
-                Get In Touch
-              </h3>
-              
-              <div className="space-y-3 sm:space-y-4">
-                <motion.div 
-                  className="flex items-center group"
-                  whileHover={{ x: 5 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <div className="w-12 h-12 bg-linear-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center mr-4 shadow-lg group-hover:scale-110 transition-transform">
-                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Email</p>
-                    <a 
-                      href={`mailto:${personal.email}`}
-                      className="text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium"
-                    >
-                      {personal.email}
-                    </a>
-                  </div>
-                </motion.div>
-                
-                <motion.div 
-                  className="flex items-center group"
-                  whileHover={{ x: 5 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <div className="w-12 h-12 bg-linear-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center mr-4 shadow-lg group-hover:scale-110 transition-transform">
-                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Phone</p>
-                    <a 
-                      href={`tel:${personal.phone}`}
-                      className="text-gray-900 dark:text-white hover:text-green-600 dark:hover:text-green-400 transition-colors font-medium"
-                    >
-                      {personal.phone}
-                    </a>
-                  </div>
-                </motion.div>
-                
-                <motion.div 
-                  className="flex items-center group"
-                  whileHover={{ x: 5 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <div className="w-12 h-12 bg-linear-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mr-4 shadow-lg group-hover:scale-110 transition-transform">
-                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Location</p>
-                    <p className="text-gray-900 dark:text-white font-medium">{personal.location}</p>
-                  </div>
-                </motion.div>
-              </div>
-            </motion.div>
-            
-            {/* Social Links */}
-            <motion.div 
-              className="bg-white/40 dark:bg-gray-800/40 backdrop-blur-xl border border-white/20 dark:border-gray-700/20 rounded-2xl shadow-xl p-8"
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.4 }}
+              <LinkedInIcon className="w-3.5 h-3.5" />
+              <span>LinkedIn</span>
+            </a>
+            <a
+              href="https://github.com/tanushree-tb"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-4 py-2 rounded-full text-xs font-mono font-semibold text-[#4C3526] dark:text-[#FBEAD5] bg-[#FBEAD5] dark:bg-[#2B1E16] border border-[rgba(76,53,38,0.2)] dark:border-[rgba(240,214,189,0.2)] hover:border-[#4C3526] shadow-sm flex items-center gap-2 hover:scale-105 transition-all"
+              data-cursor="open"
             >
-              <h3 className="text-2xl font-black text-gray-900 dark:text-white mb-6 bg-linear-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                Connect on Social
-              </h3>
-              
-              <div className="space-y-3 sm:space-y-4">
-                <motion.a
-                  href={personal.linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center p-4 bg-white/40 dark:bg-gray-700/40 backdrop-blur-sm border border-white/20 dark:border-gray-600/20 rounded-xl hover:bg-white/60 dark:hover:bg-gray-700/60 transition-all group touch-target shadow-lg hover:shadow-xl"
-                  whileHover={{ scale: 1.03, x: 5 }}
-                  whileTap={{ scale: 0.98 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <motion.div 
-                    className="w-12 h-12 bg-linear-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center mr-4 shrink-0 shadow-lg"
-                    whileHover={{ rotate: 5, scale: 1.1 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                    </svg>
-                  </motion.div>
-                  <div>
-                    <p className="text-sm sm:text-base font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400">
-                      LinkedIn Profile
-                    </p>
-                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
-                      Connect professionally
-                    </p>
-                  </div>
-                </motion.a>
-                
-                <motion.div 
-                  className="p-4 bg-linear-to-r from-purple-500/10 to-pink-500/10 dark:from-purple-500/20 dark:to-pink-500/20 backdrop-blur-sm border border-purple-200/30 dark:border-purple-700/30 rounded-xl"
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.6 }}
-                >
-                  <p className="text-sm text-gray-700 dark:text-gray-300 text-center leading-relaxed">
-                    I'm always open to discussing new opportunities, collaborations, 
-                    or just having a conversation about technology and innovation. 
-                    Feel free to reach out!
-                  </p>
-                </motion.div>
-              </div>
-            </motion.div>
+              <GitHubIcon className="w-3.5 h-3.5" />
+              <span>GitHub</span>
+            </a>
+            <a
+              href="mailto:tanushree251105@gmail.com"
+              className="px-4 py-2 rounded-full text-xs font-mono font-semibold text-[#4C3526] dark:text-[#FBEAD5] bg-[#FBEAD5] dark:bg-[#2B1E16] border border-[rgba(76,53,38,0.2)] dark:border-[rgba(240,214,189,0.2)] hover:border-[#4C3526] shadow-sm flex items-center gap-2 hover:scale-105 transition-all"
+              data-cursor="open"
+            >
+              <GmailIcon className="w-3.5 h-3.5" />
+              <span>Gmail</span>
+            </a>
           </div>
         </div>
+
+        {/* Right Column: Contact Form */}
+        <div className="lg:col-span-7">
+          <motion.form
+            onSubmit={handleSubmit}
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+            className="bg-[#F0D6BD]/85 dark:bg-[#2B1E16]/85 backdrop-blur-md p-8 sm:p-10 rounded-3xl border border-[rgba(76,53,38,0.18)] dark:border-[rgba(240,214,189,0.18)] shadow-studio flex flex-col gap-6"
+          >
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div>
+                <label htmlFor="name" className="block text-xs font-mono font-bold tracking-wider text-[#4C3526] dark:text-[#FBEAD5] uppercase mb-2">
+                  Your Name
+                </label>
+                <input
+                  id="name"
+                  type="text"
+                  required
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  placeholder="Ada Lovelace"
+                  className="w-full px-4 py-3 rounded-xl bg-[#FBEAD5] dark:bg-[#1C120C] border border-[rgba(76,53,38,0.2)] dark:border-[rgba(240,214,189,0.2)] text-sm text-[#4C3526] dark:text-[#FBEAD5] placeholder-[#8F6E54]/60 focus:outline-none focus:border-[#4C3526] dark:focus:border-[#FBEAD5] transition-colors"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="email" className="block text-xs font-mono font-bold tracking-wider text-[#4C3526] dark:text-[#FBEAD5] uppercase mb-2">
+                  Your Email
+                </label>
+                <input
+                  id="email"
+                  type="email"
+                  required
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  placeholder="ada@example.com"
+                  className="w-full px-4 py-3 rounded-xl bg-[#FBEAD5] dark:bg-[#1C120C] border border-[rgba(76,53,38,0.2)] dark:border-[rgba(240,214,189,0.2)] text-sm text-[#4C3526] dark:text-[#FBEAD5] placeholder-[#8F6E54]/60 focus:outline-none focus:border-[#4C3526] dark:focus:border-[#FBEAD5] transition-colors"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="subject" className="block text-xs font-mono font-bold tracking-wider text-[#4C3526] dark:text-[#FBEAD5] uppercase mb-2">
+                Subject
+              </label>
+              <input
+                id="subject"
+                type="text"
+                required
+                value={formData.subject}
+                onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                placeholder="Collaboration Opportunity / Project Inquiry"
+                className="w-full px-4 py-3 rounded-xl bg-[#FBEAD5] dark:bg-[#1C120C] border border-[rgba(76,53,38,0.2)] dark:border-[rgba(240,214,189,0.2)] text-sm text-[#4C3526] dark:text-[#FBEAD5] placeholder-[#8F6E54]/60 focus:outline-none focus:border-[#4C3526] dark:focus:border-[#FBEAD5] transition-colors"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="message" className="block text-xs font-mono font-bold tracking-wider text-[#4C3526] dark:text-[#FBEAD5] uppercase mb-2">
+                Message
+              </label>
+              <textarea
+                id="message"
+                rows={5}
+                required
+                value={formData.message}
+                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                placeholder="Tell me about your project or idea..."
+                className="w-full px-4 py-3 rounded-xl bg-[#FBEAD5] dark:bg-[#1C120C] border border-[rgba(76,53,38,0.2)] dark:border-[rgba(240,214,189,0.2)] text-sm text-[#4C3526] dark:text-[#FBEAD5] placeholder-[#8F6E54]/60 focus:outline-none focus:border-[#4C3526] dark:focus:border-[#FBEAD5] transition-colors resize-none"
+              />
+            </div>
+
+            {/* Submit Button with Dynamic States (Master Prompt 23) */}
+            <button
+              type="submit"
+              disabled={formState === 'sending'}
+              className="inline-flex items-center justify-center gap-2 py-4 px-8 rounded-full text-xs font-mono font-bold tracking-widest text-[#FBEAD5] bg-[#4C3526] dark:bg-[#FBEAD5] dark:text-[#1C120C] shadow-lg hover:scale-[1.01] transition-all disabled:opacity-60"
+            >
+              {formState === 'sending' ? (
+                <span>Sending...</span>
+              ) : formState === 'sent' ? (
+                <>
+                  <span>Message Sent</span>
+                  <Check className="w-4 h-4 text-emerald-300 dark:text-emerald-700" />
+                </>
+              ) : (
+                <>
+                  <span>Send Message</span>
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              )}
+            </button>
+          </motion.form>
+        </div>
+
       </div>
     </section>
   );

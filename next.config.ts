@@ -56,8 +56,6 @@ const nextConfig: NextConfig = {
   experimental: {
     // Enable optimized package imports for smaller bundles
     optimizePackageImports: ['framer-motion', '@testing-library/react'],
-    // Enable CSS optimization
-    optimizeCss: true,
   },
 
   // Production source maps (disable for smaller builds)

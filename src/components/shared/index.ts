@@ -17,7 +17,6 @@ export {
   ParallaxBackground, 
   SectionTransition 
 } from './ParallaxSection';
-export { ThemeTransitionExample } from './ThemeTransitionExample';
 export { AccessibleButton } from './AccessibleButton';
 export { SkipLinks } from './SkipLinks';
 export { LiveRegion, useLiveRegion } from './LiveRegion';

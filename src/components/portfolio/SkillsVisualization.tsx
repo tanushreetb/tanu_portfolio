@@ -1,271 +1,373 @@
-/**
- * SkillsVisualization Component
- * 
- * Advanced skills display with animated flip cards, circular progress rings,
- * category filtering, and staggered entrance animations.
- * 
- * Features:
- * - Animated skill cards with flip interaction (front: icon & name, back: details)
- * - Circular progress ring animation showing proficiency level
- * - Category filtering with animated transitions
- * - Staggered entrance animation for skill cards
- * - Responsive grid layout
- * - Reduced motion support
- * 
- * Requirements: 6.1, 6.2, 6.3, 6.4, 6.5, 2.2
- * 
- * @component
- */
-
 'use client';
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { skillsData, skillCategories, Skill } from '@/data/skillsData';
-import { staggerContainer, staggerItem } from '@/components/animations/animationVariants';
+import { 
+  Code2, 
+  Layers, 
+  Cpu, 
+  Database, 
+  GitBranch, 
+  Terminal, 
+  Globe, 
+  Brain, 
+  Sparkles, 
+  ArrowUpRight,
+  Workflow
+} from 'lucide-react';
 
-/**
- * Individual skill card with flip animation and progress ring
- */
-const SkillCard: React.FC<{ skill: Skill; index: number }> = ({ skill, index }) => {
-  const [isFlipped, setIsFlipped] = useState(false);
-  
-  // Calculate circle properties for progress ring
-  const radius = 40;
-  const circumference = 2 * Math.PI * radius;
-  const strokeDashoffset = circumference - (skill.level / 100) * circumference;
+interface TechNode {
+  id: string;
+  name: string;
+  category: 'frontend' | 'programming' | 'ai' | 'database' | 'backend';
+  role: string;
+  level: string;
+  application: string;
+  concepts: string[];
+  codeHighlight: string;
+  icon: React.ElementType;
+}
 
-  // Check if device is mobile
-  const isMobileDevice = typeof window !== 'undefined' && window.innerWidth < 768;
-  
-  return (
-    <motion.div
-      variants={staggerItem}
-      className="relative h-48 perspective-1000 touch-target"
-      onHoverStart={!isMobileDevice ? () => setIsFlipped(true) : undefined}
-      onHoverEnd={!isMobileDevice ? () => setIsFlipped(false) : undefined}
-      onClick={() => setIsFlipped(!isFlipped)}
-      onTouchStart={() => setIsFlipped(!isFlipped)}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          setIsFlipped(!isFlipped);
-        }
-      }}
-      style={{ perspective: '1000px' }}
-      role="button"
-      tabIndex={0}
-      aria-label={`${skill.name} skill card. ${skill.level}% proficiency. ${isFlipped ? 'Showing details' : 'Press Enter to see details'}`}
-      aria-pressed={isFlipped}
-    >
-      <motion.div
-        className="relative w-full h-full"
-        animate={{ rotateY: isFlipped ? 180 : 0 }}
-        transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
-        style={{ transformStyle: 'preserve-3d' }}
-      >
-        {/* Front of card */}
-        <div
-          className="absolute w-full h-full bg-white/40 dark:bg-gray-800/40 backdrop-blur-xl border border-white/20 dark:border-gray-700/20 rounded-xl shadow-xl p-6 flex flex-col items-center justify-center"
-          style={{ backfaceVisibility: 'hidden' }}
-        >
-          {/* Circular progress ring */}
-          <div className="relative w-24 h-24 mb-3">
-            <svg className="w-full h-full -rotate-90">
-              {/* Background circle */}
-              <circle
-                cx="48"
-                cy="48"
-                r={radius}
-                stroke="currentColor"
-                strokeWidth="6"
-                fill="none"
-                className="text-gray-200 dark:text-gray-700"
-              />
-              {/* Progress circle */}
-              <motion.circle
-                cx="48"
-                cy="48"
-                r={radius}
-                stroke="currentColor"
-                strokeWidth="6"
-                fill="none"
-                strokeLinecap="round"
-                className="text-blue-600 dark:text-blue-400"
-                initial={{ strokeDashoffset: circumference }}
-                animate={{ strokeDashoffset }}
-                transition={{ duration: 1.5, ease: [0.4, 0, 0.2, 1], delay: index * 0.1 }}
-                style={{
-                  strokeDasharray: circumference,
-                }}
-              />
-            </svg>
-            {/* Icon in center */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <span className="text-3xl">{skill.icon || '💡'}</span>
-            </div>
-          </div>
-          
-          {/* Skill name */}
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white text-center">
-            {skill.name}
-          </h3>
-          
-          {/* Proficiency percentage */}
-          <p className="text-sm text-blue-600 dark:text-blue-400 font-medium mt-1">
-            {skill.level}%
-          </p>
-        </div>
-
-        {/* Back of card */}
-        <div
-          className="absolute w-full h-full bg-linear-to-br from-green-600 to-teal-600 dark:from-green-700 dark:to-teal-700 rounded-xl shadow-xl p-6 flex flex-col items-center justify-center text-white"
-          style={{ 
-            backfaceVisibility: 'hidden',
-            transform: 'rotateY(180deg)'
-          }}
-        >
-          <span className="text-4xl mb-3">{skill.icon || '💡'}</span>
-          <h3 className="text-lg font-bold text-center mb-2">
-            {skill.name}
-          </h3>
-          <p className="text-sm text-center opacity-90">
-            {skill.description || 'Click to flip back'}
-          </p>
-          <div className="mt-3 px-3 py-1 bg-white/20 rounded-full text-xs font-medium">
-            {skill.category}
-          </div>
-        </div>
-      </motion.div>
-    </motion.div>
-  );
-};
-
-/**
- * Main SkillsVisualization component
- */
 export const SkillsVisualization: React.FC = () => {
-  const [activeCategory, setActiveCategory] = useState<string>('All');
-  
-  // Check if device is mobile for touch optimization
-  const isMobileDevice = typeof window !== 'undefined' && window.innerWidth < 768;
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [activeTechId, setActiveTechId] = useState<string>('react');
 
-  // Filter skills based on active category
-  const filteredSkills = activeCategory === 'All'
-    ? skillsData
-    : skillsData.filter(skill => skill.category === activeCategory);
+  const categories = [
+    { id: 'all', label: 'ALL DISCIPLINES' },
+    { id: 'ai', label: 'AI & LLMS' },
+    { id: 'backend', label: 'BACKEND & APIS' },
+    { id: 'frontend', label: 'FRONTEND & WEB' },
+    { id: 'database', label: 'DATABASES & CORE' },
+  ];
+
+  const technologies: TechNode[] = [
+    {
+      id: 'python',
+      name: 'Python',
+      category: 'ai',
+      role: 'AI/ML, Automation Workflows & Scripting',
+      level: 'Core Proficiency',
+      application: 'Powers CareEase AI, Multilingual Chatbot & Innovexis ML Applications',
+      concepts: ['Machine Learning', 'NLP & LLM Orchestration', 'Data Structuring', 'Automation Workflows'],
+      codeHighlight: 'from fastapi import FastAPI\nimport pySpark, requests',
+      icon: Terminal,
+    },
+    {
+      id: 'llms',
+      name: 'LLMs & Intelligent Agents',
+      category: 'ai',
+      role: 'Generative AI & Conversational Automation',
+      level: 'Advanced GenAI',
+      application: 'Orchestrates Qwen 2.5, MedGemma, and Gemini for clinical & scholarship bots',
+      concepts: ['Qwen 2.5 & MedGemma', 'Prompt Engineering', 'Document Entity Extraction', 'Multilingual Workflows'],
+      codeHighlight: 'response = llm.generate(prompt=clinical_doc, context=patient_history)',
+      icon: Brain,
+    },
+    {
+      id: 'fastapi',
+      name: 'FastAPI & REST APIs',
+      category: 'backend',
+      role: 'High-Performance Asynchronous Microservices',
+      level: 'Microservice Design',
+      application: 'Powers CareEase AI multi-service hospital management platform backend',
+      concepts: ['Asynchronous Endpoints', 'Role-Based Authentication', 'Pydantic Data Contracts', 'Swagger Docs'],
+      codeHighlight: '@app.post("/api/v1/discharge/extract")\nasync def process_summary(...)',
+      icon: Cpu,
+    },
+    {
+      id: 'react',
+      name: 'React.js & Next.js',
+      category: 'frontend',
+      role: 'Dynamic Responsive Interfaces & Web Apps',
+      level: 'Modern Architecture',
+      application: 'Drives Multilingual Chatbot UI, CareEase Hospital dashboards & Portfolio',
+      concepts: ['Component Architecture', 'Hooks & State Management', 'Server Components', 'Accessible UX'],
+      codeHighlight: '<ChatInterface model="qwen-2.5" language="ta" />',
+      icon: Globe,
+    },
+    {
+      id: 'kafka',
+      name: 'Kafka & PySpark',
+      category: 'backend',
+      role: 'Real-Time Streaming & Telemetry Alerts',
+      level: 'Distributed Streams',
+      application: 'Ingests patient vitals and processes real-time alert thresholds on Databricks',
+      concepts: ['Kafka Topic Pub/Sub', 'PySpark Streaming', 'Databricks Workflows', 'Threshold Alerting'],
+      codeHighlight: 'stream = spark.readStream.format("kafka").option("subscribe", "vitals")',
+      icon: Workflow,
+    },
+    {
+      id: 'sql',
+      name: 'SQL (Relational DB)',
+      category: 'database',
+      role: 'Relational Schema Modeling & Query Optimization',
+      level: 'Data Persistence',
+      application: 'Structured hospital schemas, joins, subqueries, and database normalization',
+      concepts: ['Complex Joins', 'Subqueries', 'Database Normalization', 'ACID Transactions'],
+      codeHighlight: 'SELECT p.name, v.heart_rate FROM patients p JOIN vitals v ON p.id = v.pid',
+      icon: Database,
+    },
+    {
+      id: 'mongodb',
+      name: 'MongoDB (NoSQL)',
+      category: 'database',
+      role: 'Document Modeling & Schema Validation',
+      level: 'Document Storage',
+      application: 'Scalable document persistence for chat workflows, logs, and telemetry schemas',
+      concepts: ['Document Modeling', 'JSON Aggregation', 'Indexing', 'Schema Validation'],
+      codeHighlight: 'db.chat_sessions.updateOne({ id: sessionId }, { $push: { messages } })',
+      icon: Layers,
+    },
+    {
+      id: 'java',
+      name: 'Java & Core CS',
+      category: 'database',
+      role: 'Object-Oriented Design & System Foundations',
+      level: 'Foundational CS',
+      application: 'Object-oriented architecture patterns, algorithms, and DBMS fundamentals',
+      concepts: ['OOPS Principles', 'DSA Fundamentals', 'DBMS Concepts', 'Embedding Basics'],
+      codeHighlight: 'public class HospitalDispatcher implements RoutingEngine { ... }',
+      icon: Code2,
+    },
+  ];
+
+  const filteredTechs = selectedCategory === 'all'
+    ? technologies
+    : technologies.filter((t) => t.category === selectedCategory);
+
+  const activeTech = technologies.find((t) => t.id === activeTechId) || technologies[0];
+  const ActiveIcon = activeTech.icon;
+
+  const pipelineStages = [
+    { title: '01 · Semantic UI', desc: 'HTML · CSS · React.js · Next.js' },
+    { title: '02 · Backend Services', desc: 'FastAPI · REST APIs · Async' },
+    { title: '03 · Stream Telemetry', desc: 'Kafka · PySpark (Databricks)' },
+    { title: '04 · Data Layers', desc: 'SQL Joins & Normalization · MongoDB' },
+    { title: '05 · Applied GenAI', desc: 'LLMs (Qwen 2.5, MedGemma) · NLP' },
+  ];
 
   return (
-    <section 
-      className="relative py-20 px-4 sm:px-6 overflow-hidden"
-      aria-labelledby="skills-heading"
+    <section
+      id="skills"
+      aria-label="Skills & Technologies"
+      className="py-24 sm:py-32 px-6 sm:px-12 lg:px-20 bg-[#E9CEB3] dark:bg-[#1C120C] transition-colors relative overflow-hidden"
     >
-      {/* Background decoration */}
-      <div className="absolute inset-0 opacity-30">
-        <motion.div
-          className="absolute bottom-20 left-10 w-64 h-64 bg-green-300 dark:bg-green-900 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-xl"
-          animate={{
-            x: [0, -50, 0],
-            y: [0, 30, 0],
-          }}
-          transition={{
-            duration: 18,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
+      {/* Background Architectural Watermark Heading — Perfectly Centered for All Screen Types */}
+      <div
+        className="absolute top-6 sm:top-8 md:top-10 left-1/2 -translate-x-1/2 w-full text-center pointer-events-none select-none font-display font-black text-4xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl text-[#4C3526]/[0.05] dark:text-[#FBEAD5]/[0.04] tracking-tight sm:tracking-tighter whitespace-nowrap z-0 overflow-hidden leading-none px-4"
+        aria-hidden="true"
+      >
+        03 · SKILLS
       </div>
 
-      <div className="relative z-10 container mx-auto max-w-7xl">
-        {/* Section header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <motion.div
-            className="inline-flex items-center gap-2 px-4 py-2 bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-full border border-white/20 dark:border-gray-700/20 mb-4 shadow-lg"
-            initial={{ opacity: 0, scale: 0.8 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-          >
-            <span className="text-2xl">⚡</span>
-            <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
-              Skills
-            </span>
-          </motion.div>
-
-          <h2 
-            id="skills-heading"
-            className="text-4xl sm:text-5xl lg:text-6xl font-black mb-4 bg-linear-to-r from-green-600 via-teal-600 to-cyan-600 bg-clip-text text-transparent"
-          >
-            Skills & Expertise
+      <div className="max-w-6xl mx-auto w-full flex flex-col relative z-10">
+        
+        {/* Section Header (Centered for All Screens) */}
+        <div className="flex flex-col items-center text-center mx-auto mb-12 max-w-3xl">
+          <span className="text-xs font-mono tracking-[0.25em] text-[#8F6E54] dark:text-[#C9A687] uppercase font-semibold mb-2">
+            03 · SKILLS & TECHNOLOGIES
+          </span>
+          <h2 className="text-4xl sm:text-5xl font-display font-black text-[#4C3526] dark:text-[#FBEAD5] tracking-tight mb-4">
+            Tools I use to turn ideas<br />
+            <span className="text-[#70533C] dark:text-[#D6B598] font-normal">into working experiences.</span>
           </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            {isMobileDevice ? 'Tap cards to see more details' : 'Hover over cards to see more details about each skill'}
+          <div className="w-12 h-[1.5px] bg-[#4C3526] dark:bg-[#FBEAD5] mb-4 mx-auto" />
+          <p className="text-base sm:text-lg text-[#70533C] dark:text-[#D6B598] leading-relaxed max-w-2xl mx-auto">
+            An interactive engineering matrix of the core technologies, frameworks, and architectural principles applied across my software and machine learning projects.
           </p>
-        </motion.div>
+        </div>
 
-        {/* Category filter with glassmorphism */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="flex flex-wrap justify-center gap-3 mb-12 px-2"
-          role="group"
-          aria-label="Filter skills by category"
-        >
-          {skillCategories.map((category) => (
-            <motion.button
-              key={category}
-              onClick={() => setActiveCategory(category)}
-              className={`px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-300 touch-target ${
-                activeCategory === category
-                  ? 'bg-linear-to-r from-green-600 to-teal-600 text-white shadow-lg scale-105'
-                  : 'bg-white/40 dark:bg-gray-800/40 backdrop-blur-sm border border-white/20 dark:border-gray-700/20 text-gray-700 dark:text-gray-300 hover:bg-white/60 dark:hover:bg-gray-800/60 hover:scale-105 shadow-lg'
-              }`}
-              whileHover={!isMobileDevice ? { scale: 1.05 } : undefined}
-              whileTap={{ scale: 0.95 }}
-              aria-label={`Filter by ${category}`}
-              aria-pressed={activeCategory === category}
+        {/* Category Filter Pills (Centered) */}
+        <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-10">
+          {categories.map((cat) => {
+            const isSelected = selectedCategory === cat.id;
+            return (
+              <button
+                key={cat.id}
+                onClick={() => setSelectedCategory(cat.id)}
+                className={`px-4 py-2 rounded-full text-xs font-mono tracking-wider uppercase transition-all ${
+                  isSelected
+                    ? 'bg-[#4C3526] text-[#FBEAD5] dark:bg-[#FBEAD5] dark:text-[#1C120C] shadow-sm font-bold scale-[1.02]'
+                    : 'bg-[#F0D6BD]/80 dark:bg-[#2B1E16] text-[#70533C] dark:text-[#D6B598] border border-[rgba(76,53,38,0.18)] dark:border-[rgba(240,214,189,0.18)] hover:border-[#4C3526] dark:hover:border-[#FBEAD5]'
+                }`}
+                aria-pressed={isSelected}
+              >
+                {cat.label}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Main Interactive Matrix Layout (Two Columns) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-16 items-start">
+          
+          {/* Left Column: Interactive Tactile Tech Cards Grid (8 cols) */}
+          <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <AnimatePresence mode="popLayout">
+              {filteredTechs.map((tech) => {
+                const Icon = tech.icon;
+                const isActive = activeTechId === tech.id;
+
+                return (
+                  <motion.div
+                    key={tech.id}
+                    layout
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.25 }}
+                    onClick={() => setActiveTechId(tech.id)}
+                    className={`cursor-pointer p-5 rounded-2xl border transition-all relative overflow-hidden group ${
+                      isActive
+                        ? 'bg-[#FBEAD5] dark:bg-[#38271C] border-[#4C3526] dark:border-[#FBEAD5] shadow-studio scale-[1.02]'
+                        : 'bg-[#F0D6BD]/80 dark:bg-[#2B1E16]/80 border-[rgba(76,53,38,0.18)] dark:border-[rgba(240,214,189,0.18)] hover:bg-[#F0D6BD] dark:hover:bg-[#2B1E16] hover:border-[#4C3526]'
+                    }`}
+                  >
+                    {/* Top Row: Icon + Level Badge */}
+                    <div className="flex items-center justify-between gap-3 mb-3">
+                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${
+                        isActive
+                          ? 'bg-[#4C3526] text-[#FBEAD5] dark:bg-[#FBEAD5] dark:text-[#1C120C]'
+                          : 'bg-[#FBEAD5] text-[#4C3526] dark:bg-[#38271C] dark:text-[#FBEAD5]'
+                      }`}>
+                        <Icon className="w-5 h-5" />
+                      </div>
+                      <span className="text-[10px] font-mono tracking-wider uppercase text-[#8F6E54] dark:text-[#C9A687]">
+                        {tech.level}
+                      </span>
+                    </div>
+
+                    {/* Tech Name */}
+                    <h3 className="text-lg font-display font-bold text-[#4C3526] dark:text-[#FBEAD5] mb-1 group-hover:translate-x-0.5 transition-transform">
+                      {tech.name}
+                    </h3>
+
+                    {/* Subtitle / Role */}
+                    <p className="text-xs text-[#70533C] dark:text-[#D6B598] line-clamp-1 mb-3">
+                      {tech.role}
+                    </p>
+
+                    {/* Footer Application Indicator */}
+                    <div className="flex items-center justify-between text-[11px] font-mono pt-2 border-t border-[rgba(76,53,38,0.12)] dark:border-[rgba(240,214,189,0.12)]">
+                      <span className="text-[#8F6E54] dark:text-[#C9A687] truncate max-w-[170px]">
+                        {tech.application.split(' ')[0]} {tech.application.split(' ')[1]}
+                      </span>
+                      <span className="text-[#4C3526] dark:text-[#FBEAD5] font-semibold flex items-center gap-0.5 group-hover:translate-x-1 transition-transform">
+                        Inspect <ArrowUpRight className="w-3 h-3" />
+                      </span>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </AnimatePresence>
+          </div>
+
+          {/* Right Column: Dynamic Deep-Dive Tech Inspector (5 cols) */}
+          <div className="lg:col-span-5 sticky top-28">
+            <motion.div
+              key={activeTech.id}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-[#F0D6BD] dark:bg-[#2B1E16] border border-[rgba(76,53,38,0.22)] dark:border-[rgba(240,214,189,0.22)] rounded-2xl p-6 sm:p-7 shadow-studio flex flex-col relative overflow-hidden"
             >
-              {category}
-            </motion.button>
-          ))}
-        </motion.div>
+              {/* Header Badge */}
+              <div className="flex items-center justify-between gap-3 pb-5 border-b border-[rgba(76,53,38,0.15)] dark:border-[rgba(240,214,189,0.15)] mb-5">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-xl bg-[#4C3526] text-[#FBEAD5] dark:bg-[#FBEAD5] dark:text-[#1C120C] flex items-center justify-center shadow-sm">
+                    <ActiveIcon className="w-6 h-6" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-xs font-mono font-semibold tracking-wider text-[#8F6E54] dark:text-[#C9A687] uppercase">
+                      INSPECTOR
+                    </span>
+                    <h3 className="text-2xl font-display font-bold text-[#4C3526] dark:text-[#FBEAD5]">
+                      {activeTech.name}
+                    </h3>
+                  </div>
+                </div>
+                <span className="text-[10px] font-mono px-3 py-1 rounded-full bg-[#FBEAD5] dark:bg-[#38271C] text-[#4C3526] dark:text-[#FBEAD5] font-semibold uppercase">
+                  {activeTech.level}
+                </span>
+              </div>
 
-        {/* Skills grid */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeCategory}
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-100px' }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6"
-          >
-            {filteredSkills.map((skill, index) => (
-              <SkillCard key={`${skill.name}-${activeCategory}`} skill={skill} index={index} />
+              {/* Core Role Statement */}
+              <div className="mb-5">
+                <span className="text-[10px] font-mono tracking-[0.2em] uppercase text-[#8F6E54] dark:text-[#C9A687] block mb-1">
+                  ENGINEERING PURPOSE
+                </span>
+                <p className="text-sm font-medium text-[#4C3526] dark:text-[#FBEAD5] leading-relaxed">
+                  {activeTech.role}
+                </p>
+              </div>
+
+              {/* Real-World Application */}
+              <div className="mb-5 p-3.5 rounded-xl bg-[#FBEAD5]/70 dark:bg-[#38271C]/70 border border-[rgba(76,53,38,0.12)] dark:border-[rgba(240,214,189,0.12)]">
+                <span className="text-[10px] font-mono tracking-[0.2em] uppercase text-[#8F6E54] dark:text-[#C9A687] block mb-1">
+                  PROJECT APPLICATION
+                </span>
+                <p className="text-xs text-[#70533C] dark:text-[#D6B598] leading-relaxed">
+                  {activeTech.application}
+                </p>
+              </div>
+
+              {/* Concepts Mastered */}
+              <div className="mb-5">
+                <span className="text-[10px] font-mono tracking-[0.2em] uppercase text-[#8F6E54] dark:text-[#C9A687] block mb-2">
+                  KEY PRINCIPLES & CAPABILITIES
+                </span>
+                <div className="flex flex-wrap gap-1.5">
+                  {activeTech.concepts.map((concept) => (
+                    <span
+                      key={concept}
+                      className="text-xs font-mono px-2.5 py-1 rounded-md bg-[#E9CEB3] dark:bg-[#1C120C] text-[#4C3526] dark:text-[#FBEAD5] border border-[rgba(76,53,38,0.15)] dark:border-[rgba(240,214,189,0.15)]"
+                    >
+                      {concept}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Architecture Code Snippet */}
+              <div className="mt-auto pt-4 border-t border-[rgba(76,53,38,0.15)] dark:border-[rgba(240,214,189,0.15)]">
+                <span className="text-[10px] font-mono tracking-[0.2em] uppercase text-[#8F6E54] dark:text-[#C9A687] block mb-1.5">
+                  SYNTAX / ARCHITECTURE CALL
+                </span>
+                <code className="block text-xs font-mono p-3 rounded-lg bg-[#1C120C] text-[#FBEAD5] dark:bg-[#150D08] dark:text-[#FBEAD5] overflow-x-auto shadow-inner">
+                  {activeTech.codeHighlight}
+                </code>
+              </div>
+            </motion.div>
+          </div>
+
+        </div>
+
+        {/* Architecture Pipeline Flow Banner */}
+        <div className="bg-[#F0D6BD]/80 dark:bg-[#2B1E16]/80 backdrop-blur-md p-6 sm:p-8 rounded-2xl border border-[rgba(76,53,38,0.18)] dark:border-[rgba(240,214,189,0.18)] shadow-clay flex flex-col">
+          <div className="flex items-center gap-2 mb-6">
+            <Workflow className="w-4 h-4 text-[#4C3526] dark:text-[#FBEAD5]" />
+            <span className="text-[11px] font-mono tracking-[0.22em] text-[#8F6E54] dark:text-[#C9A687] uppercase font-semibold">
+              FULL-STACK ENGINEERING LIFECYCLE FLOW
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+            {pipelineStages.map((stage, idx) => (
+              <div
+                key={stage.title}
+                className="p-4 rounded-xl bg-[#FBEAD5]/60 dark:bg-[#38271C]/60 border border-[rgba(76,53,38,0.15)] dark:border-[rgba(240,214,189,0.15)] flex flex-col hover:border-[#4C3526] transition-colors"
+              >
+                <span className="text-xs font-mono font-bold text-[#4C3526] dark:text-[#FBEAD5] mb-1">
+                  {stage.title}
+                </span>
+                <span className="text-[11px] text-[#70533C] dark:text-[#D6B598]">
+                  {stage.desc}
+                </span>
+              </div>
             ))}
-          </motion.div>
-        </AnimatePresence>
+          </div>
+        </div>
 
-        {/* Empty state */}
-        {filteredSkills.length === 0 && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="text-center py-12"
-          >
-            <p className="text-gray-500 dark:text-gray-400">
-              No skills found in this category
-            </p>
-          </motion.div>
-        )}
       </div>
     </section>
   );

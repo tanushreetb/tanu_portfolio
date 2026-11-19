@@ -1,341 +1,361 @@
-/**
- * IntegratedHero Component
- * 
- * Ultra-modern hero section with profile image, glassmorphism effects, 
- * animated gradients, and contemporary design patterns.
- * Features profile avatar, floating elements, and smooth animations.
- * 
- * Requirements: 4.1, 4.2, 4.3, 4.4, 2.2, 2.5
- */
-
 'use client';
 
-import { motion } from 'framer-motion';
+import React, { useRef } from 'react';
 import Image from 'next/image';
-import { AnimatedText } from '@/components/shared/AnimatedText';
-import { useParallax } from '@/hooks/useParallax';
-import { useResponsive } from '@/hooks/useResponsive';
-import { buttonHover, slideUp, scaleIn } from '@/components/animations/animationVariants';
-
-interface CTAButton {
-  label: string;
-  href: string;
-  variant: 'primary' | 'secondary';
-}
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { ArrowRight, Check, Sparkles, Download } from 'lucide-react';
 
 interface IntegratedHeroProps {
-  name: string;
-  title: string;
-  description: string;
-  ctaButtons: CTAButton[];
-  profileImage?: string;
-  socialLinks?: {
-    github?: string;
-    linkedin?: string;
-    twitter?: string;
-    email?: string;
-  };
+  name?: string;
+  title?: string;
+  description?: string;
+  ctaButtons?: Array<{
+    label: string;
+    href: string;
+    variant: 'primary' | 'secondary';
+  }>;
 }
 
-/**
- * IntegratedHero component with kinetic typography and animations
- * 
- * Animation sequence:
- * 1. Gradient background fades in (0-0.5s)
- * 2. Name reveals character by character (0.5-1.5s)
- * 3. Title slides up with fade (1.5-2s)
- * 4. Description fades in (2-2.5s)
- * 5. CTA buttons scale in (2.5-3s)
- */
 export const IntegratedHero: React.FC<IntegratedHeroProps> = ({
-  name,
-  title,
-  description,
-  ctaButtons,
-  profileImage = '/images/profile.jpg',
-  socialLinks = {}
+  name = "Tanushree T B",
+  title = "COMPUTER SCIENCE ENGINEER · AI/ML & FULL-STACK",
+  description = "A passionate Computer Science Engineering fresher with hands-on experience in Python, AI/ML, full-stack development, and SQL. Building AI-powered applications, intelligent agents, and automation workflows using LLMs and API integrations.",
 }) => {
-  // Responsive state
-  const { isMobile, shouldEnableParallax: enableParallax } = useResponsive();
-  
-  // Parallax effects for floating elements
-  const parallaxSlow = useParallax({ speed: 0.2, direction: 'down' });
-  const parallaxFast = useParallax({ speed: 0.5, direction: 'up' });
+  const heroRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ['start start', 'end start'],
+  });
+
+  // Scroll-driven multi-plane parallax transforms
+  const textY = useTransform(scrollYProgress, [0, 1], [0, 60]);
+  const textOpacity = useTransform(scrollYProgress, [0, 0.85], [1, 0.25]);
+  const avatarY = useTransform(scrollYProgress, [0, 1], [0, 80]);
+  const avatarScale = useTransform(scrollYProgress, [0, 1], [1, 0.94]);
+  const ringRotate = useTransform(scrollYProgress, [0, 1], [0, 35]);
+  const ringScale = useTransform(scrollYProgress, [0, 1], [1, 1.14]);
+  const card1Y = useTransform(scrollYProgress, [0, 1], [0, -65]);
+  const card2Y = useTransform(scrollYProgress, [0, 1], [0, 75]);
+
+  const scrollToSection = (id: string) => {
+    if (typeof window !== 'undefined' && window.__lenis) {
+      window.__lenis.scrollTo(`#${id}`, { offset: -50, duration: 1.2 });
+    } else {
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   return (
-    <section 
-      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-linear-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-blue-950 dark:to-indigo-950"
-      aria-labelledby="hero-heading"
-      role="banner"
+    <section
+      ref={heroRef}
+      id="hero"
+      aria-label="Hero Introduction"
+      className="relative min-h-screen w-full flex flex-col justify-between pt-24 sm:pt-28 pb-10 px-6 sm:px-12 lg:px-20 overflow-hidden bg-[#E9CEB3] dark:bg-[#1C120C]"
     >
-      {/* Animated mesh gradient background */}
-      <div className="absolute inset-0 opacity-30 dark:opacity-20">
-        <motion.div
-          className="absolute top-0 -left-4 w-72 h-72 bg-purple-300 dark:bg-purple-900 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-xl"
-          animate={{
-            x: [0, 100, 0],
-            y: [0, 50, 0],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
-        <motion.div
-          className="absolute top-0 -right-4 w-72 h-72 bg-yellow-300 dark:bg-yellow-900 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-xl"
-          animate={{
-            x: [0, -100, 0],
-            y: [0, 100, 0],
-          }}
-          transition={{
-            duration: 18,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
-        <motion.div
-          className="absolute -bottom-8 left-20 w-72 h-72 bg-pink-300 dark:bg-pink-900 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-xl"
-          animate={{
-            x: [0, 50, 0],
-            y: [0, -50, 0],
-          }}
-          transition={{
-            duration: 22,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
-      </div>
+      {/* Soft studio ambient background glows & curves */}
+      <div className="absolute top-12 left-1/3 w-[500px] h-[500px] rounded-full bg-[#D6B598]/35 dark:bg-[#2B1E16]/30 filter blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-20 right-10 w-[600px] h-[600px] rounded-full bg-[#E1C3A7]/40 dark:bg-[#20140D]/30 filter blur-3xl pointer-events-none" />
 
-      {/* Floating geometric shapes */}
-      <motion.div
-        className="absolute top-20 left-10 w-20 h-20 border-4 border-blue-400/30 dark:border-blue-600/30 rounded-lg rotate-12"
-        style={{ y: enableParallax ? parallaxSlow : 0 }}
-        animate={{ rotate: [12, 24, 12] }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="absolute bottom-32 right-16 w-16 h-16 bg-gradient-to-br from-purple-400/20 to-pink-400/20 dark:from-purple-600/20 dark:to-pink-600/20 rounded-full"
-        style={{ y: enableParallax ? parallaxFast : 0 }}
-        animate={{ scale: [1, 1.2, 1] }}
-        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="absolute top-1/3 right-1/4 w-12 h-12 border-2 border-indigo-400/30 dark:border-indigo-600/30 rounded-full"
-        style={{ y: enableParallax ? parallaxSlow : 0 }}
-        animate={{ y: [0, -20, 0] }}
-        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-      />
-
-      {/* Main content container */}
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 py-16 sm:py-20">
-        <div className="flex flex-col lg:flex-row items-center justify-center gap-12 lg:gap-16 max-w-7xl mx-auto">
-          {/* Left side - Profile Image with glassmorphism card */}
+      {/* Main Two-Column Hero Grid */}
+      <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center my-auto">
+        
+        {/* Left Column: Typography, CTAs, Stats (Desktop: 1st, Mobile: 2nd) */}
+        <motion.div
+          style={{ y: textY, opacity: textOpacity }}
+          className="order-2 lg:order-1 lg:col-span-6 xl:col-span-5 flex flex-col z-10"
+        >
+          
+          {/* Micro Header */}
           <motion.div
-            className="shrink-0"
-            initial={{ opacity: 0, scale: 0.8, x: -50 }}
-            animate={{ opacity: 1, scale: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-xs sm:text-sm font-mono tracking-[0.25em] text-[#8F6E54] dark:text-[#C9A687] uppercase font-semibold mb-3"
           >
-            <div className="relative">
-              {/* Glowing ring effect */}
-              <motion.div
-                className="absolute -inset-4 bg-linear-to-r from-blue-600 via-purple-600 to-pink-600 rounded-full opacity-75 blur-2xl"
-                animate={{
-                  scale: [1, 1.1, 1],
-                  rotate: [0, 180, 360],
-                }}
-                transition={{
-                  duration: 8,
-                  repeat: Infinity,
-                  ease: "linear"
-                }}
-              />
-              
-              {/* Profile image container with glassmorphism */}
-              <div className="relative w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96">
-                <div className="absolute inset-0 bg-white/10 dark:bg-gray-900/10 backdrop-blur-xl rounded-full border border-white/20 dark:border-gray-700/20 shadow-2xl" />
-                <div className="absolute inset-2 rounded-full overflow-hidden border-4 border-white/50 dark:border-gray-800/50 shadow-xl bg-linear-to-br from-blue-400 via-purple-400 to-pink-400">
-                  {/* Fallback gradient avatar with initials */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="text-8xl sm:text-9xl font-bold text-white drop-shadow-lg">
-                      {name.split(' ').map(n => n[0]).join('').toUpperCase()}
-                    </span>
-                  </div>
-                  {/* Actual image (if exists, will overlay the fallback) */}
-                  <Image
-                    src={profileImage}
-                    alt={`${name} - Profile Picture`}
-                    fill
-                    className="object-cover relative z-10"
-                    priority
-                    sizes="(max-width: 640px) 256px, (max-width: 1024px) 320px, 384px"
-                    onError={(e) => {
-                      // Hide image on error to show fallback
-                      (e.target as HTMLImageElement).style.display = 'none';
-                    }}
-                  />
-                </div>
+            HELLO, I'M
+          </motion.div>
+
+          {/* Master Name: Editorial Serif */}
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.1 }}
+            className="text-5xl sm:text-6xl xl:text-7xl font-display font-black text-[#4C3526] dark:text-[#FBEAD5] tracking-tight leading-[1.08] mb-4"
+          >
+            {name}
+          </motion.h1>
+
+          {/* Subtitle with Underline */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="flex flex-col mb-6"
+          >
+            <h2 className="text-xs sm:text-sm font-mono tracking-[0.22em] text-[#70533C] dark:text-[#E1C3A7] uppercase font-bold">
+              {title}
+            </h2>
+            <div className="w-14 h-[1.5px] bg-[#4C3526] dark:bg-[#FBEAD5] mt-3" />
+          </motion.div>
+
+          {/* Supporting Statement */}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="text-base sm:text-lg text-[#70533C] dark:text-[#D6B598] font-normal leading-relaxed max-w-lg mb-8"
+          >
+            {description}
+          </motion.p>
+
+          {/* Action Buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="flex flex-wrap items-center gap-4 mb-12"
+          >
+            {/* View My Work Primary Button */}
+            <button
+              onClick={() => scrollToSection('projects')}
+              className="group inline-flex items-center gap-3 pl-6 pr-2 py-2 rounded-full text-sm font-mono font-medium tracking-wide text-[#FBEAD5] bg-[#4C3526] dark:bg-[#FBEAD5] dark:text-[#1C120C] shadow-[0_8px_25px_rgba(76,53,38,0.22)] hover:shadow-lg transition-all hover:scale-[1.02]"
+              data-cursor="view"
+            >
+              <span>View My Work</span>
+              <div className="w-8 h-8 rounded-full bg-[#FBEAD5] text-[#4C3526] dark:bg-[#1C120C] dark:text-[#FBEAD5] flex items-center justify-center group-hover:translate-x-1 transition-transform">
+                <ArrowRight className="w-4 h-4" />
               </div>
+            </button>
+
+            {/* Download Resume Button */}
+            <a
+              href="/resume.pdf"
+              download
+              className="group inline-flex items-center gap-2.5 px-6 py-3 rounded-full text-sm font-mono font-medium tracking-wide text-[#4C3526] dark:text-[#FBEAD5] border border-[rgba(76,53,38,0.25)] dark:border-[rgba(240,214,189,0.25)] hover:border-[#4C3526] dark:hover:border-[#FBEAD5] transition-all hover:bg-[#F0D6BD]/50 dark:hover:bg-[#2B1E16] hover:scale-[1.02] shadow-sm"
+              data-cursor="download"
+            >
+              <Download className="w-4 h-4 group-hover:translate-y-0.5 transition-transform" />
+              <span>Download Resume</span>
+            </a>
+          </motion.div>
+
+          {/* Telemetry Stat Counter Grid (Resume Highlights) */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+            className="flex items-center gap-4 sm:gap-6 py-4 border-t border-[rgba(76,53,38,0.18)] dark:border-[rgba(240,214,189,0.18)] max-w-md"
+          >
+            {/* Stat 1 */}
+            <div className="flex flex-col">
+              <span className="text-2xl sm:text-3xl font-display font-bold text-[#4C3526] dark:text-[#FBEAD5]">
+                7.95
+              </span>
+              <span className="text-[11px] font-mono text-[#8F6E54] dark:text-[#C9A687] tracking-wider">
+                CGPA (B.E)
+              </span>
+            </div>
+
+            <div className="w-px h-8 bg-[rgba(76,53,38,0.18)] dark:bg-[rgba(240,214,189,0.18)]" />
+
+            {/* Stat 2 */}
+            <div className="flex flex-col">
+              <span className="text-2xl sm:text-3xl font-display font-bold text-[#4C3526] dark:text-[#FBEAD5]">
+                GenAI
+              </span>
+              <span className="text-[11px] font-mono text-[#8F6E54] dark:text-[#C9A687] tracking-wider">
+                Internship
+              </span>
+            </div>
+
+            <div className="w-px h-8 bg-[rgba(76,53,38,0.18)] dark:bg-[rgba(240,214,189,0.18)]" />
+
+            {/* Stat 3 */}
+            <div className="flex flex-col">
+              <span className="text-2xl sm:text-3xl font-display font-bold text-[#4C3526] dark:text-[#FBEAD5]">
+                5
+              </span>
+              <span className="text-[11px] font-mono text-[#8F6E54] dark:text-[#C9A687] tracking-wider">
+                Certifications
+              </span>
+            </div>
+
+            <div className="w-px h-8 bg-[rgba(76,53,38,0.18)] dark:bg-[rgba(240,214,189,0.18)]" />
+
+            {/* Stat 4 */}
+            <div className="flex flex-col">
+              <span className="text-2xl sm:text-3xl font-display font-bold text-[#4C3526] dark:text-[#FBEAD5]">
+                ∞
+              </span>
+              <span className="text-[11px] font-mono text-[#8F6E54] dark:text-[#C9A687] tracking-wider">
+                Continuous Learning
+              </span>
             </div>
           </motion.div>
 
-          {/* Right side - Text content */}
-          <div className="flex-1 text-center lg:text-left max-w-2xl">
-            {/* Greeting badge */}
-            <motion.div
-              className="inline-flex items-center gap-2 px-4 py-2 bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-full border border-white/20 dark:border-gray-700/20 mb-6 shadow-lg"
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-            >
-              <span className="text-2xl">👋</span>
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                Hello, I'm
-              </span>
-            </motion.div>
+          {/* Handwritten Quote Detail & Decorative Subtitle */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.7, duration: 0.8 }}
+            className="mt-6 flex flex-col"
+          >
+            <p className="font-script text-2xl sm:text-3xl text-[#4C3526] dark:text-[#FBEAD5] leading-tight">
+              Better Code<br />
+              <span className="ml-4">Brighter Tomorrows</span>
+            </p>
+            {/* Artistic flourish line */}
+            <svg className="w-32 h-4 text-[#4C3526] dark:text-[#FBEAD5] mt-1" viewBox="0 0 140 16" fill="none">
+              <path d="M2 12C35 4 90 2 138 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            </svg>
+            <span className="text-[9px] font-mono tracking-[0.25em] text-[#8F6E54] dark:text-[#C9A687] uppercase mt-2 select-none">
+              CODE · CREATE · GROW
+            </span>
+          </motion.div>
+        </motion.div>
 
-            {/* Name with gradient text - single line */}
-            <motion.h1
-              id="hero-heading"
-              className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black mb-4 bg-linear-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent leading-tight whitespace-nowrap"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5, duration: 0.8 }}
-            >
-              {name}
-            </motion.h1>
+        {/* Right Column: 3D Studio Avatar Composition (Desktop: 2nd, Mobile: 1st) */}
+        <div className="order-1 lg:order-2 lg:col-span-6 xl:col-span-7 relative flex items-center justify-center min-h-[400px] sm:min-h-[520px] lg:min-h-[640px]">
+          
+          {/* Layer 1: Concentric 3D Porcelain Portal Rings */}
+          <motion.div
+            style={{ rotate: ringRotate, scale: ringScale }}
+            className="absolute inset-0 flex items-center justify-center pointer-events-none"
+          >
+            {/* Outer Ring */}
+            <div className="w-[320px] sm:w-[460px] lg:w-[560px] h-[320px] sm:h-[460px] lg:h-[560px] rounded-full border border-[rgba(76,53,38,0.18)] dark:border-[rgba(240,214,189,0.15)] shadow-[0_30px_70px_rgba(76,53,38,0.06)] bg-gradient-to-b from-[#F0D6BD]/70 via-[#E1C3A7]/30 to-transparent dark:from-[#2B1E16]/40 dark:via-transparent" />
+            {/* Middle Ring */}
+            <div className="absolute w-[250px] sm:w-[360px] lg:w-[440px] h-[250px] sm:h-[360px] lg:h-[440px] rounded-full border border-[rgba(76,53,38,0.15)] dark:border-[rgba(240,214,189,0.12)] shadow-[inset_0_4px_16px_rgba(76,53,38,0.04)]" />
+            {/* Inner Ring */}
+            <div className="absolute w-[180px] sm:w-[260px] lg:w-[320px] h-[180px] sm:h-[260px] lg:h-[320px] rounded-full border border-[rgba(76,53,38,0.12)] dark:border-[rgba(240,214,189,0.1)]" />
+          </motion.div>
 
-            {/* Title with animated underline */}
-            <motion.div
-              className="mb-6"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7 }}
-            >
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800 dark:text-gray-100 mb-2">
-                {title}
-              </h2>
-              <motion.div
-                className="h-1 bg-linear-to-r from-blue-600 to-purple-600 rounded-full"
-                initial={{ width: 0 }}
-                animate={{ width: "100%" }}
-                transition={{ delay: 1, duration: 0.8 }}
+          {/* Layer 2: Floating Porcelain Spheres */}
+          {/* Top-left small orb */}
+          <motion.div
+            animate={{ y: [0, -10, 0] }}
+            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute top-16 left-6 w-12 h-12 rounded-full bg-gradient-to-br from-[#FBEAD5] via-[#F0D6BD] to-[#D6B598] dark:from-[#38271C] dark:to-[#1C120C] shadow-clay border border-[#FBEAD5]/80 dark:border-[#FBEAD5]/10 pointer-events-none"
+          />
+          {/* Bottom-right large sphere */}
+          <motion.div
+            animate={{ y: [0, 12, 0] }}
+            transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute -bottom-6 right-4 sm:right-12 w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gradient-to-br from-[#FBEAD5] via-[#F0D6BD] to-[#D6B598] dark:from-[#38271C] dark:to-[#1C120C] shadow-studio border border-[#FBEAD5]/80 dark:border-[#FBEAD5]/10 pointer-events-none z-20"
+          />
+
+          {/* Layer 3: Central 3D Avatar in Designer Lounge Chair */}
+          <motion.div
+            style={{ y: avatarY, scale: avatarScale }}
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+            className="relative z-10 w-full max-w-[420px] sm:max-w-[460px] lg:max-w-[500px] flex items-center justify-center animate-float-gentle"
+          >
+            <div className="relative w-full aspect-[682/1024] max-h-[560px] sm:max-h-[640px] lg:max-h-[680px]">
+              <Image
+                src="/images/avatar-studio.png"
+                alt="Tanushree T B — Seated in Lounge Chair with Laptop"
+                fill
+                priority
+                className="object-contain object-center filter drop-shadow-[0_25px_35px_rgba(76,53,38,0.22)] dark:drop-shadow-[0_25px_40px_rgba(0,0,0,0.6)]"
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 500px"
               />
-            </motion.div>
+            </div>
+          </motion.div>
 
-            {/* Description */}
-            <motion.p
-              className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.9 }}
-            >
-              {description}
-            </motion.p>
+          {/* Layer 4: Floating Translucent Cards (Exact Match to Reference UI) */}
+          
+          {/* Top Right Card: "Ideas to Impact" */}
+          <motion.div
+            style={{ y: card1Y }}
+            className="absolute top-12 sm:top-20 right-2 sm:right-8 z-20 bg-[#F0D6BD]/85 dark:bg-[#2B1E16]/85 backdrop-blur-md rounded-2xl p-4 sm:p-5 shadow-clay border border-[rgba(76,53,38,0.18)] dark:border-[rgba(240,214,189,0.18)] max-w-[130px] sm:max-w-[150px]"
+          >
+            <span className="text-xs sm:text-sm font-display font-bold text-[#4C3526] dark:text-[#FBEAD5] leading-tight block">
+              Ideas<br />to<br />Impact
+            </span>
+            <div className="w-5 h-[1.5px] bg-[#4C3526] dark:bg-[#FBEAD5] mt-2" />
+          </motion.div>
 
-            {/* Social links */}
-            {Object.keys(socialLinks).length > 0 && (
-              <motion.div
-                className="flex gap-4 justify-center lg:justify-start mb-8"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.1 }}
-              >
-                {socialLinks.github && (
-                  <a
-                    href={socialLinks.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-12 h-12 flex items-center justify-center bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-full border border-white/20 dark:border-gray-700/20 hover:scale-110 hover:bg-white dark:hover:bg-gray-700 transition-all shadow-lg"
-                    aria-label="GitHub Profile"
-                  >
-                    <svg className="w-6 h-6 text-gray-700 dark:text-gray-300" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                    </svg>
-                  </a>
-                )}
-                {socialLinks.linkedin && (
-                  <a
-                    href={socialLinks.linkedin}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-12 h-12 flex items-center justify-center bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-full border border-white/20 dark:border-gray-700/20 hover:scale-110 hover:bg-white dark:hover:bg-gray-700 transition-all shadow-lg"
-                    aria-label="LinkedIn Profile"
-                  >
-                    <svg className="w-6 h-6 text-gray-700 dark:text-gray-300" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                    </svg>
-                  </a>
-                )}
-                {socialLinks.email && (
-                  <a
-                    href={`mailto:${socialLinks.email}`}
-                    className="w-12 h-12 flex items-center justify-center bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-full border border-white/20 dark:border-gray-700/20 hover:scale-110 hover:bg-white dark:hover:bg-gray-700 transition-all shadow-lg"
-                    aria-label="Email Contact"
-                  >
-                    <svg className="w-6 h-6 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
-                  </a>
-                )}
-              </motion.div>
-            )}
+          {/* Middle Right Card: Checklist */}
+          <motion.div
+            style={{ y: card2Y }}
+            className="absolute top-44 sm:top-52 right-0 sm:right-4 z-20 bg-[#F0D6BD]/85 dark:bg-[#2B1E16]/85 backdrop-blur-md rounded-2xl p-4 sm:p-5 shadow-clay border border-[rgba(76,53,38,0.18)] dark:border-[rgba(240,214,189,0.18)] min-w-[125px] sm:min-w-[145px]"
+          >
+            <ul className="flex flex-col gap-2 text-xs font-mono font-medium text-[#4C3526] dark:text-[#FBEAD5]">
+              <li className="flex items-center gap-2">
+                <span className="w-3.5 h-3.5 rounded bg-[#4C3526] dark:bg-[#FBEAD5] text-[#FBEAD5] dark:text-[#1C120C] flex items-center justify-center text-[9px] font-bold">✓</span>
+                <span>Code</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="w-3.5 h-3.5 rounded bg-[#4C3526] dark:bg-[#FBEAD5] text-[#FBEAD5] dark:text-[#1C120C] flex items-center justify-center text-[9px] font-bold">✓</span>
+                <span>Create</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="w-3.5 h-3.5 rounded bg-[#4C3526] dark:bg-[#FBEAD5] text-[#FBEAD5] dark:text-[#1C120C] flex items-center justify-center text-[9px] font-bold">✓</span>
+                <span>Learn</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="w-3.5 h-3.5 rounded bg-[#4C3526] dark:bg-[#FBEAD5] text-[#FBEAD5] dark:text-[#1C120C] flex items-center justify-center text-[9px] font-bold">✓</span>
+                <span>Repeat</span>
+              </li>
+            </ul>
+          </motion.div>
 
-            {/* CTA Buttons with modern styling */}
-            <motion.div
-              className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
-              initial="hidden"
-              animate="visible"
-              variants={{
-                hidden: { opacity: 0 },
-                visible: {
-                  opacity: 1,
-                  transition: {
-                    staggerChildren: 0.1,
-                    delayChildren: 1.3
-                  }
-                }
-              }}
-            >
-              {ctaButtons.map((button, index) => (
-                <motion.a
-                  key={index}
-                  href={button.href}
-                  className={`
-                    group relative px-8 py-4 rounded-xl font-semibold text-lg overflow-hidden
-                    transition-all duration-300 text-center touch-target
-                    ${button.variant === 'primary'
-                      ? 'bg-linear-to-r from-blue-600 to-purple-600 text-white shadow-lg hover:shadow-2xl hover:scale-105'
-                      : 'bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border-2 border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-100 hover:bg-white dark:hover:bg-gray-700 hover:scale-105'
-                    }
-                  `}
-                  variants={scaleIn}
-                  whileHover={{ y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                  aria-label={button.label}
-                >
-                  {button.variant === 'primary' && (
-                    <motion.div
-                      className="absolute inset-0 bg-linear-to-r from-purple-600 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity"
-                      initial={false}
-                    />
-                  )}
-                  <span className="relative z-10 flex items-center justify-center gap-2">
-                    {button.label}
-                    <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                    </svg>
-                  </span>
-                </motion.a>
-              ))}
-            </motion.div>
-          </div>
+          {/* Bottom Right: Dark Brown Book Stack & Minimal Coffee Mug (Master Prompt) */}
+          <motion.div
+            animate={{ y: [0, -6, 0] }}
+            transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+            className="absolute bottom-10 sm:bottom-16 right-2 sm:right-6 z-20 flex flex-col items-end pointer-events-auto"
+          >
+            {/* Minimal Cream Coffee Mug */}
+            <div className="mb-2 mr-4 bg-[#FBEAD5] dark:bg-[#2B1E16] rounded-lg px-2.5 py-1.5 shadow-sm text-right border border-[rgba(76,53,38,0.18)] dark:border-[rgba(240,214,189,0.18)]">
+              <span className="text-[8px] font-mono tracking-wider font-bold text-[#4C3526] dark:text-[#FBEAD5] uppercase leading-tight block">
+                GOOD IDEAS<br />FUEL PROGRESS ♥
+              </span>
+            </div>
+
+            {/* 4 Stacked Book Spines (Dark brown covers with warm cream typography) */}
+            <div className="flex flex-col gap-1 w-36 sm:w-44">
+              <div className="bg-[#4C3526] dark:bg-[#20140D] border border-[rgba(76,53,38,0.3)] px-3 py-1 rounded-md text-[10px] font-mono font-medium text-[#FBEAD5] text-center shadow-sm">
+                LLMs & GenAI
+              </div>
+              <div className="bg-[#4C3526] dark:bg-[#20140D] border border-[rgba(76,53,38,0.3)] px-3 py-1 rounded-md text-[10px] font-mono font-medium text-[#FBEAD5] text-center shadow-sm">
+                Python & AI/ML
+              </div>
+              <div className="bg-[#4C3526] dark:bg-[#20140D] border border-[rgba(76,53,38,0.3)] px-3 py-1 rounded-md text-[10px] font-mono font-medium text-[#FBEAD5] text-center shadow-sm">
+                FastAPI & React
+              </div>
+              <div className="bg-[#4C3526] dark:bg-[#20140D] border border-[rgba(76,53,38,0.3)] px-3 py-1 rounded-md text-[10px] font-mono font-medium text-[#FBEAD5] text-center shadow-sm">
+                DSA & SQL
+              </div>
+            </div>
+          </motion.div>
         </div>
-
-
       </div>
+
+      {/* Bottom Center Scroll Indicator (Exact Match to Image) */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1, duration: 0.8 }}
+        className="mx-auto flex flex-col items-center gap-2 pt-6 select-none cursor-pointer"
+        onClick={() => scrollToSection('about')}
+      >
+        {/* Mouse icon */}
+        <div className="w-5 h-8 rounded-full border-2 border-[#4C3526] dark:border-[#FBEAD5] flex items-start justify-center p-1">
+          <motion.div
+            animate={{ y: [0, 8, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+            className="w-1 h-2 rounded-full bg-[#4C3526] dark:bg-[#FBEAD5]"
+          />
+        </div>
+        <span className="text-[9px] font-mono font-bold tracking-[0.22em] text-[#70533C] dark:text-[#C9A687] uppercase">
+          SCROLL TO EXPLORE
+        </span>
+        <div className="w-6 h-[1.5px] bg-[#70533C] dark:bg-[#C9A687]" />
+      </motion.div>
     </section>
   );
 };

@@ -11,12 +11,17 @@ import { IntegratedHero } from '@/components/portfolio/IntegratedHero';
 
 // Mock framer-motion to avoid animation issues in tests
 jest.mock('framer-motion', () => ({
-  motion: {
-    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-    h2: ({ children, ...props }: any) => <h2 {...props}>{children}</h2>,
-    p: ({ children, ...props }: any) => <p {...props}>{children}</p>,
-    a: ({ children, ...props }: any) => <a {...props}>{children}</a>,
-  },
+  motion: new Proxy({}, {
+    get: (_target, prop: string) => {
+      return ({ children, ...props }: any) => {
+        const Tag = prop || 'div';
+        return React.createElement(Tag, props, children);
+      };
+    },
+  }),
+  AnimatePresence: ({ children }: any) => <>{children}</>,
+  useScroll: () => ({ scrollYProgress: { get: () => 0 } }),
+  useTransform: () => 0,
 }));
 
 // Mock useParallax hook

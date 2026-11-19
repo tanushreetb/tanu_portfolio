@@ -7,106 +7,78 @@ import { BlogPost } from '@/types';
 
 export const blogPosts: BlogPost[] = [
   {
-    slug: 'getting-started-with-machine-learning',
-    title: 'Getting Started with Machine Learning',
-    excerpt: 'My journey into machine learning and the key concepts I learned while building the Hospital Management System.',
+    slug: 'architecting-careease-ai-hospital-operations',
+    title: 'Architecting CareEase AI: An Integrated Hospital Operations Ecosystem',
+    excerpt: 'How we engineered a multi-service healthcare operations platform with FastAPI, M/M/c queuing, real-time Kafka streaming, and clinical LLMs.',
     content: `
-# Getting Started with Machine Learning
+# Architecting CareEase AI: An Integrated Hospital Operations Ecosystem
 
-Machine learning has been an exciting journey for me. Through my work on the Hospital Management System project, I've learned how to apply ML concepts to real-world problems.
+CareEase AI was built to solve critical operational bottlenecks in modern hospitals—from outpatient department (OPD) queue congestions to clinical document extraction and patient vital monitoring.
 
-## Key Learnings
+## System Architecture
 
-1. **Data Preprocessing**: Understanding how to clean and prepare data is crucial
-2. **Model Selection**: Choosing the right algorithm for the problem
-3. **Evaluation**: Measuring model performance accurately
-
-## Next Steps
-
-I'm excited to continue exploring deep learning and neural networks in my upcoming projects.
+1. **Role-Based Interfaces & FastAPI**: Developed high-performance asynchronous backend services with role-based clinical dashboards.
+2. **AI Discharge Assistant**: Integrated specialized LLMs (Qwen 2.5, MedGemma, and Gemini) to extract diagnoses and medication schedules from PDF/TXT documents, coupled with automated regional-language audio readout.
+3. **M/M/c Queuing Engine**: Designed a multi-server queuing theory model for OPD wait-time prediction and intelligent patient routing.
+4. **Real-Time Telemetry Streaming**: Implemented Apache Kafka and PySpark on Databricks for real-time vital sign ingestion and automated threshold alerts.
     `,
-    publishedAt: new Date('2024-11-15'),
-    category: 'Learning'
-  },
-  {
-    slug: 'building-hospital-management-system',
-    title: 'Building a Hospital Management System',
-    excerpt: 'How we won first prize at Spark\'24 with our innovative hospital management platform.',
-    content: `
-# Building a Hospital Management System
-
-Our team developed a centralized platform for hospital administration that won first prize at Spark'24.
-
-## The Challenge
-
-Hospitals need efficient systems to manage patient records, appointments, and staff coordination.
-
-## Our Solution
-
-We built a comprehensive system using:
-- Machine Learning for predictive analytics
-- Modern web technologies (HTML, CSS, JavaScript)
-- User-friendly interface design
-
-## Results
-
-The system streamlined hospital operations and received recognition at the competition.
-    `,
-    publishedAt: new Date('2024-10-20'),
+    publishedAt: new Date('2026-02-15'),
     category: 'Projects'
   },
   {
-    slug: 'exploring-model-context-protocol',
-    title: 'Exploring Model Context Protocol',
-    excerpt: 'Understanding the Model Context Protocol and its applications in modern software development.',
+    slug: 'multilingual-chatbot-for-scholarships',
+    title: 'Building a Multilingual Chatbot for College Scholarships with Qwen 2.5',
+    excerpt: 'Automating scholarship query handling for college students using Python, NLP, and Qwen 2.5 LLM with multilingual accessibility.',
     content: `
-# Exploring Model Context Protocol
+# Building a Multilingual Chatbot for College Scholarships with Qwen 2.5
 
-The Model Context Protocol (MCP) is an emerging standard for AI model interactions.
+College students often miss crucial financial aid deadlines or struggle with complex eligibility rules. We built an AI-powered conversational platform to automate scholarship-related query resolution.
 
-## What is MCP?
+## Technical Highlights
 
-MCP provides a standardized way for applications to communicate with AI models.
-
-## Why It Matters
-
-- Consistency across different AI platforms
-- Easier integration for developers
-- Better context management
-
-## My Experience
-
-Working with MCP has opened my eyes to the future of AI-powered applications.
+- **Conversational Workflows**: Structured context-aware prompt orchestration with Qwen 2.5 LLM.
+- **Multilingual Support**: Enabled students from regional backgrounds to query eligibility criteria in their native languages.
+- **Frontend & Deployment**: Built a lightweight, responsive Next.js conversational interface for immediate assistance.
     `,
-    publishedAt: new Date('2024-09-10'),
-    category: 'Technology'
+    publishedAt: new Date('2026-01-20'),
+    category: 'AI & GenAI'
   },
   {
-    slug: 'heart-disease-prediction-with-ml',
-    title: 'Heart Disease Prediction with Machine Learning',
-    excerpt: 'Developing a machine learning model to predict heart disease risk factors.',
+    slug: 'data-science-genai-internship-learnings',
+    title: 'Data Science & GenAI Internship at Innovexis: Key Takeaways',
+    excerpt: 'Reflecting on building web-integrated machine learning applications, dataset structuring, and automation workflows.',
     content: `
-# Heart Disease Prediction with Machine Learning
+# Data Science & GenAI Internship at Innovexis: Key Takeaways
 
-This project focuses on using ML algorithms to predict heart disease risk.
+During my internship at Innovexis Pvt. Ltd., I collaborated on building web-integrated machine learning applications using Python and delivering automation-focused solutions.
 
-## Dataset
+## What I Learned
 
-We used medical data including:
-- Age, gender, and lifestyle factors
-- Medical history and test results
-- Risk indicators
-
-## Model Development
-
-We experimented with various algorithms to find the best predictor.
-
-## Impact
-
-Early detection can save lives, making this project particularly meaningful.
+1. **Dataset Structuring for AI**: Preparing robust, high-quality data pipelines for backend model integration.
+2. **Web-Integrated ML**: Connecting Python model inference endpoints seamlessly to web-facing interfaces.
+3. **Structured Processing Workflows**: Automating operational tasks through clean, reproducible pipelines.
+4. **Milestone Delivery**: Collaborating in an Agile team to deliver features on schedule.
     `,
-    publishedAt: new Date('2024-08-05'),
-    category: 'Projects'
+    publishedAt: new Date('2025-12-28'),
+    category: 'Career & Learning'
+  },
+  {
+    slug: 'real-time-vital-streaming-kafka-pyspark',
+    title: 'Real-Time Patient Vital Monitoring with Kafka and PySpark on Databricks',
+    excerpt: 'Designing a fault-tolerant streaming architecture for continuous physiological telemetry and emergency threshold alerts.',
+    content: `
+# Real-Time Patient Vital Monitoring with Kafka and PySpark on Databricks
+
+Catching subtle acute physiological changes in patients requires real-time telemetry instead of periodic manual checks.
+
+## Streaming Pipeline
+
+- **Kafka Ingestion**: High-throughput message streaming from simulated patient vital sensors into Kafka topics.
+- **PySpark on Databricks**: Windowed streaming aggregations detecting heart rate and SpO2 threshold breaches.
+- **Alert Dispatch**: Immediate automated notifications dispatched to attending nursing stations.
+    `,
+    publishedAt: new Date('2025-11-10'),
+    category: 'Architecture'
   }
 ];
 

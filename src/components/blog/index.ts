@@ -17,5 +17,3 @@ export { PostCard } from './PostCard';
 export { BlogLayout } from './BlogLayout';
 export { NavigationBar } from './NavigationBar';
 
-// Example/demo components
-export { BlogPostModalExample } from './BlogPostModalExample';

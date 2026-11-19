@@ -1,165 +1,151 @@
-/**
- * AchievementsSection Component
- * 
- * Modern achievements section with glassmorphism cards and animated elements.
- * Features trophy icons, gradient accents, and smooth animations.
- */
-
 'use client';
 
+import React from 'react';
 import { motion } from 'framer-motion';
-import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import { Award, Trophy, GraduationCap, CheckCircle2, ShieldCheck } from 'lucide-react';
 
-interface Achievement {
-  title: string;
-  description: string;
-  icon?: string;
-  date?: string;
-  highlight?: string;
-}
+export const AchievementsSection = () => {
+  const achievements = [
+    {
+      icon: GraduationCap,
+      tag: 'ACADEMIC EXCELLENCE',
+      title: 'B.E in Computer Science & Engineering',
+      subtitle: 'Sona College of Technology, Salem · CGPA: 7.95/10',
+      description: 'Maintaining a strong academic record (Till 6th Semester) with solid foundations in OOPS, DSA, DBMS, AI/ML, and Full-Stack Engineering. Graduated HSC from Dr Krishna Vikas Matric Hr. Sec School with 88.8%.',
+      year: '2023 – 2027',
+    },
+    {
+      icon: ShieldCheck,
+      tag: 'PROFESSIONAL CREDENTIALS',
+      title: 'Industry Certifications in AI & Computing',
+      subtitle: 'Python · Java · SQL · ML with AI · Cloud Computing',
+      description: 'Earned foundational industry certifications covering Programming in Python, Programming in Java, SQL Fundamentals, Machine Learning With AI, and Cloud Computing Basics.',
+      year: '2024 – 2025',
+    },
+    {
+      icon: Trophy,
+      tag: 'PROJECT INNOVATION',
+      title: 'CareEase AI & Multilingual Chatbot',
+      subtitle: 'Integrated Hospital Operations & Campus Accessibility',
+      description: 'Pioneered an integrated hospital operations platform with M/M/c queuing, real-time Kafka/PySpark vital monitoring, and an AI discharge assistant with regional audio output, alongside a multilingual scholarship chatbot.',
+      year: '2025 – 2026',
+    },
+  ];
 
-interface AchievementsSectionProps {
-  achievements?: Achievement[];
-}
-
-const defaultAchievements: Achievement[] = [
-  {
-    title: "Won First Prize in Spark'24",
-    description: "Developed a Hospital Management System frontend using HTML, CSS, and JavaScript with Machine Learning integration",
-    icon: "🏆",
-    date: "2024",
-    highlight: "Hospital Management System"
-  },
-  {
-    title: "Two Industry Ready Projects",
-    description: "Completed Frontend Development certification with hands-on industry projects",
-    icon: "💼",
-    date: "2024"
-  },
-  {
-    title: "Machine Learning with AI Certificate",
-    description: "Intershala Training Certificate in Machine Learning and Artificial Intelligence",
-    icon: "🤖",
-    date: "2024"
-  },
-  {
-    title: "Event Organizer",
-    description: "Event organizer of English club and Member & Event organizer in the IQ EQ Club",
-    icon: "🎯",
-    date: "2023-2024"
-  }
-];
-
-export const AchievementsSection: React.FC<AchievementsSectionProps> = ({
-  achievements = defaultAchievements
-}) => {
-  const { ref, isVisible } = useScrollAnimation({ threshold: 0.1, triggerOnce: true });
+  const certificationsList = [
+    { name: 'Programming in Python', issuer: 'Certified Foundation', icon: '🐍' },
+    { name: 'Machine Learning With AI', issuer: 'Advanced Competency', icon: '🧠' },
+    { name: 'Cloud Computing Basics', issuer: 'Infrastructure & Cloud', icon: '☁️' },
+    { name: 'SQL Fundamentals', issuer: 'Relational DB & Queries', icon: '🗄️' },
+    { name: 'Programming in Java', issuer: 'OOP & Architecture', icon: '☕' },
+  ];
 
   return (
     <section
-      ref={ref}
-      className="relative py-20 px-4 sm:px-6 overflow-hidden"
-      aria-labelledby="achievements-heading"
+      id="achievements"
+      aria-label="Achievements and Activities"
+      className="py-24 sm:py-32 px-6 sm:px-12 lg:px-20 bg-[#D6B598]/25 dark:bg-[#1C120C] transition-colors relative overflow-hidden"
     >
-      {/* Background decoration */}
-      <div className="absolute inset-0 opacity-30">
-        <motion.div
-          className="absolute top-20 right-10 w-64 h-64 bg-yellow-300 dark:bg-yellow-900 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-xl"
-          animate={{
-            x: [0, 50, 0],
-            y: [0, 30, 0],
-          }}
-          transition={{
-            duration: 15,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
+      {/* Background Architectural Watermark Heading — Perfectly Centered for All Screen Types */}
+      <div
+        className="absolute top-6 sm:top-8 md:top-10 left-1/2 -translate-x-1/2 w-full text-center pointer-events-none select-none font-display font-black text-4xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl text-[#4C3526]/[0.05] dark:text-[#FBEAD5]/[0.04] tracking-tight sm:tracking-tighter whitespace-nowrap z-0 overflow-hidden leading-none px-4"
+        aria-hidden="true"
+      >
+        06 · ACHIEVEMENTS
       </div>
 
-      <div className="relative z-10 container mx-auto max-w-7xl">
-        {/* Section Header */}
-        <motion.div
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: 20 }}
-          animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ duration: 0.6 }}
-        >
-          <motion.div
-            className="inline-flex items-center gap-2 px-4 py-2 bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-full border border-white/20 dark:border-gray-700/20 mb-4 shadow-lg"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={isVisible ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
-            transition={{ delay: 0.2 }}
-          >
-            <span className="text-2xl">🏆</span>
-            <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
-              Achievements
-            </span>
-          </motion.div>
-          
-          <h2
-            id="achievements-heading"
-            className="text-4xl sm:text-5xl lg:text-6xl font-black mb-4 bg-linear-to-r from-yellow-600 via-orange-600 to-red-600 bg-clip-text text-transparent"
-          >
-            Milestones & Recognition
+      <div className="max-w-6xl mx-auto w-full flex flex-col relative z-10">
+        
+        {/* Section Header (Centered for All Screens) */}
+        <div className="flex flex-col items-center text-center mx-auto mb-16 max-w-2xl">
+          <span className="text-xs font-mono tracking-[0.25em] text-[#8F6E54] dark:text-[#C9A687] uppercase font-semibold mb-2">
+            06 · ACHIEVEMENTS & CERTIFICATIONS
+          </span>
+          <h2 className="text-4xl sm:text-5xl font-display font-black text-[#4C3526] dark:text-[#FBEAD5] tracking-tight mb-4">
+            Milestones and credentials<br />
+            <span className="text-[#70533C] dark:text-[#D6B598] font-normal">earned through dedication.</span>
           </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Celebrating achievements and contributions in technology and leadership
-          </p>
-        </motion.div>
-
-        {/* Achievements Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-          {achievements.map((achievement, index) => (
-            <motion.div
-              key={index}
-              className="group relative"
-              initial={{ opacity: 0, y: 30 }}
-              animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-              transition={{ delay: 0.1 * index, duration: 0.6 }}
-            >
-              {/* Glassmorphism Card */}
-              <div className="relative h-full bg-white/40 dark:bg-gray-800/40 backdrop-blur-xl rounded-2xl border border-white/20 dark:border-gray-700/20 p-8 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
-                {/* Gradient accent line */}
-                <div className="absolute top-0 left-0 right-0 h-1 bg-linear-to-r from-yellow-500 via-orange-500 to-red-500 rounded-t-2xl" />
-                
-                {/* Icon */}
-                <div className="flex items-start gap-4 mb-4">
-                  <div className="shrink-0 w-16 h-16 flex items-center justify-center bg-linear-to-br from-yellow-400 to-orange-500 rounded-2xl shadow-lg text-3xl group-hover:scale-110 transition-transform">
-                    {achievement.icon || '🏆'}
-                  </div>
-                  
-                  <div className="flex-1">
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1">
-                      {achievement.title}
-                    </h3>
-                    {achievement.date && (
-                      <span className="text-sm text-gray-500 dark:text-gray-400">
-                        {achievement.date}
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                {/* Description */}
-                <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
-                  {achievement.description}
-                </p>
-
-                {/* Highlight badge */}
-                {achievement.highlight && (
-                  <div className="inline-flex items-center gap-2 px-3 py-1 bg-yellow-100 dark:bg-yellow-900/30 rounded-full text-sm font-medium text-yellow-800 dark:text-yellow-300">
-                    <span>⭐</span>
-                    {achievement.highlight}
-                  </div>
-                )}
-
-                {/* Hover glow effect */}
-                <div className="absolute inset-0 rounded-2xl bg-linear-to-r from-yellow-500/0 via-orange-500/0 to-red-500/0 group-hover:from-yellow-500/10 group-hover:via-orange-500/10 group-hover:to-red-500/10 transition-all duration-300 pointer-events-none" />
-              </div>
-            </motion.div>
-          ))}
+          <div className="w-12 h-[1.5px] bg-[#4C3526] dark:bg-[#FBEAD5] mb-4 mx-auto" />
         </div>
+
+        {/* Gallery Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+          {achievements.map((item, idx) => {
+            const Icon = item.icon;
+            return (
+              <motion.div
+                key={item.title}
+                initial={{ opacity: 0, y: 25 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: idx * 0.12 }}
+                className="bg-[#F0D6BD]/85 dark:bg-[#2B1E16]/85 backdrop-blur-md p-8 rounded-3xl border border-[rgba(76,53,38,0.18)] dark:border-[rgba(240,214,189,0.18)] shadow-clay hover:shadow-studio flex flex-col justify-between transition-all hover:scale-[1.01]"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="w-12 h-12 rounded-xl bg-[#FBEAD5] dark:bg-[#38271C] border border-[rgba(76,53,38,0.18)] dark:border-[rgba(240,214,189,0.18)] flex items-center justify-center text-[#4C3526] dark:text-[#FBEAD5] shadow-sm">
+                      <Icon className="w-5 h-5" />
+                    </div>
+                    <span className="text-xs font-mono font-bold text-[#8F6E54] dark:text-[#C9A687]">
+                      {item.year}
+                    </span>
+                  </div>
+
+                  <span className="text-[10px] font-mono tracking-[0.2em] font-bold text-[#8F6E54] dark:text-[#C9A687] uppercase block mb-2">
+                    {item.tag}
+                  </span>
+
+                  <h3 className="text-xl font-display font-bold text-[#4C3526] dark:text-[#FBEAD5] mb-1 leading-snug">
+                    {item.title}
+                  </h3>
+
+                  <h4 className="text-xs font-mono text-[#70533C] dark:text-[#E1C3A7] font-semibold mb-4">
+                    {item.subtitle}
+                  </h4>
+
+                  <p className="text-sm text-[#70533C] dark:text-[#D6B598] leading-relaxed">
+                    {item.description}
+                  </p>
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
+
+        {/* Certifications Showcase Row */}
+        <div className="bg-[#F0D6BD]/85 dark:bg-[#2B1E16]/85 backdrop-blur-md p-8 sm:p-10 rounded-3xl border border-[rgba(76,53,38,0.18)] dark:border-[rgba(240,214,189,0.18)] shadow-clay flex flex-col">
+          <div className="flex items-center justify-between flex-wrap gap-4 mb-6">
+            <div>
+              <span className="text-[10px] font-mono tracking-[0.22em] text-[#8F6E54] dark:text-[#C9A687] uppercase font-bold block mb-1">
+                VALIDATED TECHNICAL EXPERTISE
+              </span>
+              <h3 className="text-2xl font-display font-bold text-[#4C3526] dark:text-[#FBEAD5]">
+                Verified Certifications
+              </h3>
+            </div>
+            <span className="text-xs font-mono font-semibold text-[#8F6E54] dark:text-[#C9A687] px-3 py-1 rounded-full bg-[#FBEAD5] dark:bg-[#38271C] border border-[rgba(76,53,38,0.18)]">
+              5 Certifications Completed
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+            {certificationsList.map((cert) => (
+              <div
+                key={cert.name}
+                className="p-4 rounded-2xl bg-[#FBEAD5]/80 dark:bg-[#38271C]/80 border border-[rgba(76,53,38,0.15)] dark:border-[rgba(240,214,189,0.15)] flex flex-col items-start gap-2 shadow-sm hover:border-[#4C3526] transition-colors"
+              >
+                <span className="text-2xl">{cert.icon}</span>
+                <span className="text-sm font-display font-bold text-[#4C3526] dark:text-[#FBEAD5] leading-tight">
+                  {cert.name}
+                </span>
+                <span className="text-[10px] font-mono text-[#8F6E54] dark:text-[#C9A687]">
+                  {cert.issuer}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
       </div>
     </section>
   );

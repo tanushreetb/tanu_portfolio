@@ -162,6 +162,13 @@ export interface PortfolioData {
       /** Percentage or grade achieved */
       percentage: string;
     };
+    /** Secondary school leaving certificate details */
+    sslc?: {
+      /** School name */
+      school: string;
+      /** Graduation year */
+      year: string;
+    };
   };
   /** Array of portfolio projects */
   projects: ProjectData[];
@@ -177,5 +184,22 @@ export interface PortfolioData {
     frameworks: string[];
     /** Database technologies */
     database: string[];
+    /** AI and Machine Learning */
+    ai_ml?: string[];
+    /** Backend & APIs */
+    backend?: string[];
+    /** Core computer science concepts */
+    core_concepts?: string[];
+    /** Hardware and embedded concepts */
+    hardware?: string[];
   };
+  /** Internship experiences */
+  internship?: Array<{
+    role: string;
+    company: string;
+    period: string;
+    highlights: string[];
+  }>;
+  /** Professional certifications */
+  certifications?: string[];
 }

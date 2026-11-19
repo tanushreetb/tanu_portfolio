@@ -1,22 +1,39 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Playfair_Display, Plus_Jakarta_Sans, JetBrains_Mono, Caveat } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/contexts/ThemeContext";
-import { PerformanceMonitor } from "@/components/shared/PerformanceMonitor";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const playfair = Playfair_Display({
+  variable: "--font-playfair",
   subsets: ["latin"],
+  display: "swap",
+  weight: ["500", "600", "700", "900"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const plusJakarta = Plus_Jakarta_Sans({
+  variable: "--font-sans",
   subsets: ["latin"],
+  display: "swap",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-mono",
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["400", "500", "600"],
+});
+
+const caveat = Caveat({
+  variable: "--font-script",
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["400", "600", "700"],
 });
 
 export const metadata: Metadata = {
-  title: "Tanushree T B - Portfolio & Blog",
-  description: "Portfolio and blog website showcasing projects, skills, and insights in computer science and web development",
+  title: "Tanushree T B — Computer Science Engineer",
+  description: "Portfolio of Tanushree T B, Computer Science Engineer specializing in Machine Learning, Full Stack Web Development, and human-centric software solutions.",
+  keywords: ["Tanushree T B", "Computer Science", "Frontend Developer", "Machine Learning", "Portfolio"],
 };
 
 export default function RootLayout({
@@ -25,18 +42,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="scroll-smooth">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${playfair.variable} ${plusJakarta.variable} ${jetbrainsMono.variable} ${caveat.variable} font-sans antialiased bg-[#E9CEB3] text-[#4C3526] dark:bg-[#1C120C] dark:text-[#FBEAD5] selection:bg-[#4C3526] selection:text-[#FBEAD5] dark:selection:bg-[#FBEAD5] dark:selection:text-[#1C120C]`}
       >
-        {/* Skip to main content link for keyboard navigation accessibility */}
-        <a href="#main-content" className="skip-to-main">
-          Skip to main content
-        </a>
         <ThemeProvider>
           {children}
-          {/* Performance monitor - only in development */}
-          <PerformanceMonitor />
         </ThemeProvider>
       </body>
     </html>

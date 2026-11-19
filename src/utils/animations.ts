@@ -153,8 +153,8 @@ export const staggerContainer = {
  * ```
  */
 export const prefersReducedMotion = (): boolean => {
-  // Server-side rendering check: window is undefined on server
-  if (typeof window === 'undefined') return false;
+  // Server-side rendering check: window is undefined on server, or matchMedia not supported
+  if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return false;
   
   // Query the user's motion preference via CSS media query
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;

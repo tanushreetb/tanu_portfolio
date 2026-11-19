@@ -18,7 +18,7 @@ import styles from '@/styles/blog.module.css';
 // Dynamic metadata for blog homepage
 export const metadata: Metadata = {
   title: 'Blog | Tanushree T B - Technology, Projects & Learning',
-  description: 'Read articles about technology, machine learning projects, web development, and computer science insights by Tanushree T B. Explore topics including Hospital Management Systems, Model Context Protocol, and Heart Disease Prediction.',
+  description: 'Read articles about technology, machine learning, and computer science engineering by Tanushree T B. Explore insights on CareEase AI, Multilingual Chatbots, LLMs, and real-time streaming telemetry.',
   keywords: ['Blog', 'Technology', 'Machine Learning', 'Web Development', 'Computer Science', 'Projects', 'Learning', 'Programming'],
   authors: [{ name: 'Tanushree T B' }],
   openGraph: {

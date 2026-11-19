@@ -139,9 +139,7 @@ export const HeroSection: React.FC = () => {
               {...(!shouldReduceMotion && { variants: itemVariants })}
             >
               <p className="text-lg text-gray-600 dark:text-gray-300 mb-8 max-w-2xl">
-                Passionate about creating innovative solutions through technology. 
-                Currently pursuing Computer Science Engineering with a focus on 
-                frontend development and machine learning applications.
+                A passionate Computer Science Engineering fresher with hands-on experience in Python, AI/ML, full-stack development, and SQL. Interested in building AI-powered applications, intelligent agents, and automation workflows using LLMs and API integrations.
               </p>
             </ItemWrapper>
             

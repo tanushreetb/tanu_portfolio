@@ -26,22 +26,31 @@ interface EducationSectionProps {
 
 const defaultEducation: EducationItem[] = [
   {
-    degree: "BE, Computer Science and Engineering",
-    institution: "Sona College of Technology",
-    duration: "Expected to graduate in 2027",
-    score: "8.02%",
-    scoreLabel: "CGPA",
-    description: "Currently pursuing Bachelor's degree in Computer Science And Engineering",
+    degree: "B.E, Computer Science and Engineering",
+    institution: "Sona College of Technology, Salem",
+    duration: "09/2023 – 06/2027",
+    score: "7.95/10",
+    scoreLabel: "CGPA (Till 6th Sem)",
+    description: "Pursuing Bachelor's degree with specialization in AI/ML, full-stack systems, and software engineering",
     icon: "🎓"
   },
   {
-    degree: "HSC (2022 - 2023)",
-    institution: "Dr Krishna Vikas Matric Higher Secondary School",
-    duration: "2022 - 2023",
-    score: "88.84%",
+    degree: "HSC (Class XII)",
+    institution: "Dr Krishna Vikas Matric Hr. Sec School, Dharmapuri",
+    duration: "06/2022 – 03/2023",
+    score: "88.8%",
     scoreLabel: "Percentage",
-    description: "Prevailed an aggregate of 88.84%",
+    description: "Completed Higher Secondary Certificate with distinction",
     icon: "📚"
+  },
+  {
+    degree: "SSLC (Class X)",
+    institution: "Dr Krishna Vikas Matric Hr. Sec School, Dharmapuri",
+    duration: "06/2020 – 03/2021",
+    score: "Completed",
+    scoreLabel: "Secondary Education",
+    description: "Completed Secondary School Leaving Certificate",
+    icon: "🏫"
   }
 ];
 
@@ -188,10 +197,11 @@ export const EducationSection: React.FC<EducationSectionProps> = ({
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {[
-              { name: "Basics of Python", icon: "🐍" },
-              { name: "Generative AI", icon: "🤖" },
-              { name: "Design Thinking - a primer", icon: "🎨" },
-              { name: "Machine Learning with AI", icon: "🧠", highlight: true }
+              { name: "Programming in Python", icon: "🐍", highlight: true },
+              { name: "Machine Learning with AI", icon: "🧠", highlight: true },
+              { name: "Cloud Computing Basics", icon: "☁️" },
+              { name: "SQL Fundamentals", icon: "🗄️" },
+              { name: "Programming in Java", icon: "☕" }
             ].map((cert, index) => (
               <motion.div
                 key={index}
